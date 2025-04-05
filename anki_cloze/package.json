@@ -2,5 +2,9 @@
   "name": "anki_cloze",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "esbuild": "^0.25.2",
+    "typescript": "^5.8.3"
+  }
 }
