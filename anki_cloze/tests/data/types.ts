@@ -1,5 +1,5 @@
-import { ParseTreeNode } from "../../src/parser/types";
-import { Token } from "../../src/tokenizer/types";
+import { ParseTreeNode } from "../../src/parser/parse_types";
+import { Token } from "../../src/tokenizer/token_types";
 
 export type TestCase = {
   description: string;

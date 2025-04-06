@@ -1,4 +1,4 @@
-import { ListNode, ParseTreeNode } from "../../src/parser/types";
+import { ListNode, ParseTreeNode } from "../../src/parser/parse_types";
 import { TestCase } from "./types";
 
 export const TestCases: TestCase[] = [

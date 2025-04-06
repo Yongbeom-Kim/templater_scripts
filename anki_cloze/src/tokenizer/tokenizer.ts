@@ -1,4 +1,4 @@
-import { Token, TokenizerState, TokenType } from "./types";
+import { Token, TokenizerState, TokenType } from "./token_types";
 
 // TODO: Consider converting to stream-based tokenizer if performance becomes an issue
 export const tokenize = (text: string): Token[] => {

@@ -1,5 +1,5 @@
-import { Token, TokenType } from "../tokenizer/types";
-import { ListNode, ParseTreeNode, ParserState, TextLineNode } from "./types";
+import { Token, TokenType } from "../tokenizer/token_types";
+import { ListNode, ParseTreeNode, ParserState, TextLineNode } from "./parse_types";
 
 export const parse = (tokens: Token[]): ParseTreeNode[] => {
   const result: ParseTreeNode[] = [];

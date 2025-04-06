@@ -1,4 +1,4 @@
-import { Token, TokenType } from "../tokenizer/types";
+import { Token, TokenType } from "../tokenizer/token_types";
 
 export class ParserState {
   constructor(

@@ -1,6 +1,6 @@
 import { describe, test, expect } from "@jest/globals";
-import { tokenize } from "../../src/tokenizer/main";
-import { TokenType } from "../../src/tokenizer/types";
+import { tokenize } from "../../src/tokenizer/tokenizer";
+import { TokenType } from "../../src/tokenizer/token_types";
 import { TestCases as ListTestCases } from "../data/list.testcase";
 import { TestCases as TextTestCases } from "../data/text.testcase";
 
