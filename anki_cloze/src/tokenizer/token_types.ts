@@ -1,9 +1,9 @@
 export enum TokenType {
   Text = "text",
-  Number = "number",  
+  Number = "number",
   Punctuation = "punctuation",
   Newline = "newline", // one or more consecutive newlines
-  Whitespace = "whitespace" // one or more consecutive spaces or tabs
+  Whitespace = "whitespace", // one or more consecutive spaces or tabs
 }
 
 export type Token = {
@@ -11,27 +11,30 @@ export type Token = {
   lexeme: string;
   line_pos: number;
   col_pos: number;
-}
+};
 
 export namespace Token {
-  export const Create = (state: TokenizerState, type: TokenType, lexeme: string): Token => {
+  export const Create = (
+    state: TokenizerState,
+    type: TokenType,
+    lexeme: string,
+  ): Token => {
     return {
       type,
       lexeme,
       line_pos: state.line_pos,
-      col_pos: state.col_pos
-    }
-  }
+      col_pos: state.col_pos,
+    };
+  };
 }
 export class TokenizerState {
   constructor(
     readonly text: string,
     readonly next: number = 0,
     readonly line_pos: number = 1,
-    readonly col_pos: number = 0
-  ) {
-  }
-  
+    readonly col_pos: number = 0,
+  ) {}
+
   eof(): boolean {
     return this.next >= this.text.length;
   }
@@ -60,17 +63,30 @@ export class TokenizerState {
   consume(n_chars: number): [TokenizerState, string] {
     const newText = this.text.slice(this.next, this.next + n_chars);
     const [newLinePos, newColPos] = this.getUpdatedPosition(newText);
-    return [new TokenizerState(this.text, this.next + n_chars, newLinePos, newColPos), newText];
+    return [
+      new TokenizerState(this.text, this.next + n_chars, newLinePos, newColPos),
+      newText,
+    ];
   }
 
-  peekUntil(predicate: (char: string) => boolean, max_chars: number = -1): string {
+  peekUntil(
+    predicate: (char: string) => boolean,
+    max_chars: number = -1,
+  ): string {
     return this.consumeUntil(predicate, max_chars)[1];
   }
 
-  consumeUntil(predicate: (char: string) => boolean, max_chars: number = -1): [TokenizerState, string] {
+  consumeUntil(
+    predicate: (char: string) => boolean,
+    max_chars: number = -1,
+  ): [TokenizerState, string] {
     let result = "";
     let idx = this.next;
-    while (max_chars != 0 && idx < this.text.length && !predicate(this.text[idx])) {
+    while (
+      max_chars != 0 &&
+      idx < this.text.length &&
+      !predicate(this.text[idx])
+    ) {
       result += this.text[idx];
       idx++;
       max_chars--;

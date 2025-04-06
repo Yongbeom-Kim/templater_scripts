@@ -3,7 +3,7 @@ import { Token, TokenType } from "../tokenizer/token_types";
 export class ParserState {
   constructor(
     public readonly tokens: Token[],
-    public readonly next: number = 0
+    public readonly next: number = 0,
   ) {}
 
   good(): boolean {
@@ -29,7 +29,7 @@ export class ParserState {
     return [
       new ParserState(
         this.tokens,
-        Math.min(this.next + n_tokens, this.tokens.length)
+        Math.min(this.next + n_tokens, this.tokens.length),
       ),
       result,
     ];
@@ -37,7 +37,7 @@ export class ParserState {
 
   consumeUntilType(
     type: TokenType,
-    include: boolean = false
+    include: boolean = false,
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -99,6 +99,7 @@ export abstract class ParseTreeNode {
     visitor.visit(this);
   }
   abstract toText(): string;
+  abstract clone(): ParseTreeNode;
 }
 
 /**
@@ -121,6 +122,10 @@ export class TextNode extends ParseTreeNode {
   static FromTokens(tokens: Token[]): TextNode {
     return new TextNode(tokens);
   }
+
+  clone(): TextNode {
+    return new TextNode(this.contents);
+  }
 }
 
 /**
@@ -136,12 +141,22 @@ export class TextLineNode extends ParseTreeNode {
   constructor(
     public readonly indent_level: number,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline: Token
+    public readonly endingNewline: Token,
   ) {
     super();
   }
   toText(): string {
-    return this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme;
+    return (
+      this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme
+    );
+  }
+
+  clone(): TextLineNode {
+    return new TextLineNode(
+      this.indent_level,
+      this.contents,
+      this.endingNewline,
+    );
   }
 }
 
@@ -154,11 +169,27 @@ export class ListNode extends TextLineNode {
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline: Token,
-    public readonly children: ParseTreeNode[]
+    public readonly children: ParseTreeNode[],
   ) {
     super(indent_level, contents, endingNewline);
   }
   toText(): string {
-    return this.marker.map((t) => t.lexeme).join("") + " " + this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme;
+    return (
+      this.marker.map((t) => t.lexeme).join("") +
+      " " +
+      this.contents.map((t) => t.toText()).join("") +
+      this.endingNewline.lexeme
+    );
+  }
+
+  clone(): ListNode {
+    return new ListNode(
+      this.ordered,
+      this.indent_level,
+      this.marker,
+      this.contents,
+      this.endingNewline,
+      this.children,
+    );
   }
 }

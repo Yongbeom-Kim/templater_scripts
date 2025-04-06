@@ -6,4 +6,5 @@ export type TestCase = {
   input: string;
   tokenize_expect: (result: Token[]) => void;
   parse_expect: (result: ParseTreeNode[]) => void;
-}
+  clozify_expect: (result: ParseTreeNode[]) => void;
+};
