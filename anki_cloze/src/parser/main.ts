@@ -6,11 +6,6 @@ export const parse = (tokens: Token[]): ParseTreeNode[] => {
   let state = new ParserState(tokens);
   while (state.good()) {
     let node: ParseTreeNode | null = null;
-    [state, node] = tryParseList(state);
-    if (node) {
-      result.push(node);
-      continue;
-    }
     [state, node] = tryParseLine(state);
     if (node) {
       result.push(node);
@@ -21,31 +16,8 @@ export const parse = (tokens: Token[]): ParseTreeNode[] => {
   return result;
 };
 
-const tryParseList = (
-  state: ParserState
-): [ParserState, ParseTreeNode | null] => {
-  if (!state.isStartOfLine()) {
-    return [state, null];
-  }
-  let newState = state, ordered, indent, marker, content, endingNewline;
-  [newState, indent] = state.consumeOnlyType(TokenType.Whitespace);
-  if (peekUnorderedListMarker(newState)) {
-    ordered = false;
-  } else if (peekOrderedListMarker(newState)) {
-    ordered = true;
-  } else {
-    return [state, null];
-  }
-  [newState, marker] = newState.consumeUntilType(TokenType.Whitespace, false);
-  [newState] = newState.consume();
-  [newState, content] = newState.consumeUntilType(TokenType.Newline, false);
-  [newState, [endingNewline]] = newState.consume();
-  return [newState, new ListNode(ordered, getIndentLevel(indent), marker, content, endingNewline, [])];
-}
-
-
 /**
- * Parse a line of text, from the start of a line to the end of the line.
+ * Attempts to parse either a list item or a text line from the current position
  */
 const tryParseLine = (
   state: ParserState
@@ -53,17 +25,30 @@ const tryParseLine = (
   if (!state.isStartOfLine()) {
     return [state, null];
   }
-  let indent, newState = state, tokens, endingNewline;
+
+  let newState = state, indent, marker, content, endingNewline;
   [newState, indent] = state.consumeOnlyType(TokenType.Whitespace);
-  [newState, tokens] = newState.consumeUntilType(TokenType.Newline, false);
+
+  // Check for list markers first
+  if (peekUnorderedListMarker(newState) || peekOrderedListMarker(newState)) {
+    const ordered = peekOrderedListMarker(newState);
+    [newState, marker] = newState.consumeUntilType(TokenType.Whitespace, false);
+    [newState] = newState.consume();
+    [newState, content] = newState.consumeUntilType(TokenType.Newline, false);
+    [newState, [endingNewline]] = newState.consume();
+    return [newState, new ListNode(ordered, getIndentLevel(indent), marker, content, endingNewline, [])];
+  } 
+  
+  // If not a list, treat as regular text line
+  [newState, content] = newState.consumeUntilType(TokenType.Newline, false);
   [newState, [endingNewline]] = newState.consume();
-  if (tokens.length > 0 || endingNewline || newState.eof()) {
-    return [newState, new TextLineNode(getIndentLevel(indent), tokens, endingNewline)];
+  if (content.length > 0 || endingNewline || newState.eof()) {
+    return [newState, new TextLineNode(getIndentLevel(indent), content, endingNewline)];
   }
+
   console.warn(`Start of line, but no tokens found. This should be unreachable. ${newState.debug()}`);
   return [state, null];
 };
-
 
 const getIndentLevel = (tokens: Token[]): number => {
   const level = tokens.reduce((acc, token) => {
