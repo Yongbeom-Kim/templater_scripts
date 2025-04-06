@@ -89,8 +89,15 @@ export enum ParseTreeNodeType {
   List = "list",
 }
 
+export abstract class ParseTreeVisitor {
+  abstract visit(node: ParseTreeNode): void;
+}
+
 export abstract class ParseTreeNode {
   abstract type: ParseTreeNodeType;
+  visit(visitor: ParseTreeVisitor) {
+    visitor.visit(this);
+  }
 }
 
 /**
