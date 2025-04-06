@@ -45,14 +45,14 @@ export const TestCases: TestCase[] = [
         expect((node as ListNode).contents.length).toBe(3);
         expect((node as ListNode).contents[0]).toBeInstanceOf(ClozeTextNode);
         expect(((node as ListNode).contents[0] as ClozeTextNode).front).toBe(
-          true
+          true,
         );
         expect((node as ListNode).contents[1]).not.toBeInstanceOf(
-          ClozeTextNode
+          ClozeTextNode,
         );
         expect((node as ListNode).contents[2]).toBeInstanceOf(ClozeTextNode);
         expect(((node as ListNode).contents[2] as ClozeTextNode).front).toBe(
-          false
+          false,
         );
       }
     },
@@ -62,7 +62,7 @@ export const TestCases: TestCase[] = [
   - {{c2::::Front}} = {{c2::Back}}
 1. {{c3::::Front}} - {{c3::Back}}
   1. {{c4::::Front}} = {{c4::Back}}
-  2. {{c5::::Front}} = {{c5::Back}}`
+  2. {{c5::::Front}} = {{c5::Back}}`,
       );
     },
   },

@@ -43,7 +43,10 @@ const tryParseLine = (
   [newState, indent] = state.consumeOnlyType(TokenType.Whitespace);
   if (indent.length > 1) {
     throw new Error(
-      `Asssertion failed in tryParseLine function. Whitespace tokens should all be combined into one token. Indent: "${indent.map((t) => t.lexeme).join("|")}", Token Chain: "${state.peek().map((t) => t.lexeme).join("")}"`,
+      `Asssertion failed in tryParseLine function. Whitespace tokens should all be combined into one token. Indent: "${indent.map((t) => t.lexeme).join("|")}", Token Chain: "${state
+        .peek()
+        .map((t) => t.lexeme)
+        .join("")}"`,
     );
   }
 

@@ -136,3 +136,4 @@ dist
 .pnp.*
 
 __snapshots__/
+README.md

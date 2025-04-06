@@ -3,7 +3,7 @@ import { Token, TokenType } from "../tokenizer/token_types";
 export class ParserState {
   constructor(
     public readonly tokens: Token[],
-    public readonly next: number = 0
+    public readonly next: number = 0,
   ) {}
 
   good(): boolean {
@@ -29,7 +29,7 @@ export class ParserState {
     return [
       new ParserState(
         this.tokens,
-        Math.min(this.next + n_tokens, this.tokens.length)
+        Math.min(this.next + n_tokens, this.tokens.length),
       ),
       result,
     ];
@@ -37,7 +37,7 @@ export class ParserState {
 
   consumeUntilType(
     type: TokenType,
-    include: boolean = false
+    include: boolean = false,
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -167,7 +167,7 @@ export class TextLineNode extends ParseTreeNode {
   constructor(
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline?: Token // undefined if EOF
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super();
   }
@@ -193,7 +193,7 @@ export class ListNode extends TextLineNode {
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline?: Token, // undefined if EOF
-    public readonly children: ParseTreeNode[] = []
+    public readonly children: ParseTreeNode[] = [],
   ) {
     super(indent, contents, endingNewline); // This should combine indent + marker + contents, but it's okay since we don't rely on the inheritance.
   }
@@ -214,7 +214,7 @@ export class ListNode extends TextLineNode {
       this.marker,
       this.contents,
       this.endingNewline,
-      this.children
+      this.children,
     );
   }
 }

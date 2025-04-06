@@ -1,4 +1,3 @@
-
 import { clozify } from "../src/main";
 import { tokenize } from "../src/tokenizer/tokenizer";
 import { TestCases as TextTestCases } from "./data/text.testcase";
