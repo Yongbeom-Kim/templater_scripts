@@ -4,7 +4,7 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
   - Front = Back
 1. Front - Back
   1. Front = Back
-  2. Front = Back", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+  2. Front = Back", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   ListNode {
     "children": [],
@@ -66,7 +66,10 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "marker": [
       {
         "col_pos": 0,
@@ -138,7 +141,15 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 2,
       "type": "newline",
     },
-    "indent_level": 1,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": "  ",
+        "line_pos": 2,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "marker": [
       {
         "col_pos": 2,
@@ -210,7 +221,10 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 3,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "marker": [
       {
         "col_pos": 0,
@@ -288,7 +302,15 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 4,
       "type": "newline",
     },
-    "indent_level": 1,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": "  ",
+        "line_pos": 4,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "marker": [
       {
         "col_pos": 2,
@@ -360,7 +382,15 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 1,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": "  ",
+        "line_pos": 5,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "marker": [
       {
         "col_pos": 2,
@@ -382,7 +412,7 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
 `;
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Mixed whitespace and newlines", "input": " 	 
- 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+ 	 ", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -398,7 +428,15 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 2,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": " 	 ",
+        "line_pos": 1,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "type": "text",
   },
   TextLineNode {
@@ -409,7 +447,15 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 2,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": " 	 ",
+        "line_pos": 2,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
@@ -417,7 +463,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Multiple newlines", "input": "
 
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -434,14 +480,17 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
 `;
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with newline", "input": "Hello 123
-World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+World", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -476,7 +525,10 @@ World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function to
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
   TextLineNode {
@@ -494,13 +546,16 @@ World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function to
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
 `;
 
-exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with numbers", "input": "123 456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with numbers", "input": "123 456", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -529,7 +584,10 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
@@ -537,7 +595,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Text with mixed whitespace and newlines", "input": "Hello 123
  	World
-456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+456", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -572,7 +630,10 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
   TextLineNode {
@@ -596,7 +657,15 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       "line_pos": 2,
       "type": "newline",
     },
-    "indent_level": 2,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": " 	",
+        "line_pos": 2,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "type": "text",
   },
   TextLineNode {
@@ -614,7 +683,10 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
@@ -626,7 +698,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 Newlines
 
 
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -651,7 +723,10 @@ Newlines
       "line_pos": 1,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
   TextLineNode {
@@ -677,13 +752,16 @@ Newlines
       "line_pos": 4,
       "type": "newline",
     },
-    "indent_level": 0,
+    "indent": IndentNode {
+      "indent": undefined,
+      "type": "indent",
+    },
     "type": "text",
   },
 ]
 `;
 
-exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Whitespace characters", "input": " 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Whitespace characters", "input": " 	 ", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
     "contents": [
@@ -693,7 +771,15 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
       },
     ],
     "endingNewline": undefined,
-    "indent_level": 2,
+    "indent": IndentNode {
+      "indent": {
+        "col_pos": 0,
+        "lexeme": " 	 ",
+        "line_pos": 1,
+        "type": "whitespace",
+      },
+      "type": "indent",
+    },
     "type": "text",
   },
 ]

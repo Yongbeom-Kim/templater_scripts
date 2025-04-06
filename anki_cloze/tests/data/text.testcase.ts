@@ -7,6 +7,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual("Hello 123\nWorld");
+    },
   },
   {
     description: "Simple text with numbers",
@@ -14,6 +17,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual("123 456");
+    },
   },
   {
     description: "Whitespace characters",
@@ -21,6 +27,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual(" \t ");
+    },
   },
   {
     description: "Multiple newlines",
@@ -28,6 +37,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual("\n\n");
+    },
   },
   {
     description: "Text with mixed whitespace and newlines",
@@ -35,6 +47,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual("Hello 123\n \tWorld\n456");
+    },
   },
   {
     description: "Text with multiple newlines",
@@ -42,6 +57,9 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual("Multiple\n\n\nNewlines\n\n\n");
+    },
   },
   {
     description: "Mixed whitespace and newlines",
@@ -49,5 +67,8 @@ export const TestCases: TestCase[] = [
     tokenize_expect: () => true,
     parse_expect: () => true,
     clozify_expect: () => true,
+    main_expect: (output: string) => {
+      expect(output).toEqual(" \t \n \t ");
+    },
   },
 ];

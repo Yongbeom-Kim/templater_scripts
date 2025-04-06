@@ -3,7 +3,7 @@ import { Token, TokenType } from "../tokenizer/token_types";
 export class ParserState {
   constructor(
     public readonly tokens: Token[],
-    public readonly next: number = 0,
+    public readonly next: number = 0
   ) {}
 
   good(): boolean {
@@ -29,7 +29,7 @@ export class ParserState {
     return [
       new ParserState(
         this.tokens,
-        Math.min(this.next + n_tokens, this.tokens.length),
+        Math.min(this.next + n_tokens, this.tokens.length)
       ),
       result,
     ];
@@ -37,7 +37,7 @@ export class ParserState {
 
   consumeUntilType(
     type: TokenType,
-    include: boolean = false,
+    include: boolean = false
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -85,6 +85,7 @@ export class ParserState {
   }
 }
 export enum ParseTreeNodeType {
+  Indent = "indent",
   Text = "text",
   List = "list",
 }
@@ -100,6 +101,31 @@ export abstract class ParseTreeNode {
   }
   abstract toText(): string;
   abstract clone(): ParseTreeNode;
+
+  static toText(tree: ParseTreeNode[]): string {
+    return tree.map((n) => n.toText()).join("");
+  }
+}
+
+export class IndentNode extends ParseTreeNode {
+  type = ParseTreeNodeType.Indent;
+  private constructor(public readonly indent?: Token) {
+    super();
+    if (indent && indent.type !== TokenType.Whitespace) {
+      throw new Error("Indent must be a whitespace token");
+    }
+  }
+  toText(): string {
+    return this.indent?.lexeme ?? "";
+  }
+
+  clone(): IndentNode {
+    return new IndentNode(this.indent);
+  }
+
+  static FromWhitespace(whitespace: Token): IndentNode {
+    return new IndentNode(whitespace);
+  }
 }
 
 /**
@@ -139,24 +165,22 @@ export class TextLineNode extends ParseTreeNode {
   type = ParseTreeNodeType.Text;
 
   constructor(
-    public readonly indent_level: number,
+    public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline: Token,
+    public readonly endingNewline?: Token // undefined if EOF
   ) {
     super();
   }
   toText(): string {
     return (
-      this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme
+      this.indent.toText() +
+      this.contents.map((t) => t.toText()).join("") +
+      (this.endingNewline?.lexeme ?? "")
     );
   }
 
   clone(): TextLineNode {
-    return new TextLineNode(
-      this.indent_level,
-      this.contents,
-      this.endingNewline,
-    );
+    return new TextLineNode(this.indent, this.contents, this.endingNewline);
   }
 }
 
@@ -165,31 +189,32 @@ export class ListNode extends TextLineNode {
 
   constructor(
     public readonly ordered: boolean,
-    public readonly indent_level: number,
+    public readonly indent: IndentNode,
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline: Token,
-    public readonly children: ParseTreeNode[],
+    public readonly endingNewline?: Token, // undefined if EOF
+    public readonly children: ParseTreeNode[] = []
   ) {
-    super(indent_level, contents, endingNewline);
+    super(indent, contents, endingNewline); // This should combine indent + marker + contents, but it's okay since we don't rely on the inheritance.
   }
   toText(): string {
     return (
+      this.indent.toText() +
       this.marker.map((t) => t.lexeme).join("") +
       " " +
       this.contents.map((t) => t.toText()).join("") +
-      this.endingNewline.lexeme
+      (this.endingNewline?.lexeme ?? "")
     );
   }
 
   clone(): ListNode {
     return new ListNode(
       this.ordered,
-      this.indent_level,
+      this.indent,
       this.marker,
       this.contents,
       this.endingNewline,
-      this.children,
+      this.children
     );
   }
 }

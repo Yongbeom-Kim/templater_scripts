@@ -3,7 +3,7 @@ import { parse } from "../../src/parser/parser";
 import { TestCases as ListTestCases } from "../data/list.testcase";
 import { TestCases as TextTestCases } from "../data/text.testcase";
 import { tokenize } from "../../src/tokenizer/tokenizer";
-
+import { ParseTreeNode } from "../../src/parser/parse_types";
 describe("test text.testcase.ts", () => {
   it.each(TextTestCases)(
     'should parse "%p" correctly',
@@ -11,6 +11,7 @@ describe("test text.testcase.ts", () => {
       const tokens = tokenize(input);
       const parseTree = parse(tokens);
       parse_expect(parseTree);
+      expect(ParseTreeNode.toText(parseTree)).toEqual(input);
       expect(parseTree).toMatchSnapshot();
     },
   );
@@ -23,6 +24,7 @@ describe("test list.testcase.ts", () => {
       const tokens = tokenize(input);
       const parseTree = parse(tokens);
       parse_expect(parseTree);
+      expect(ParseTreeNode.toText(parseTree)).toEqual(input);
       expect(parseTree).toMatchSnapshot();
     },
   );

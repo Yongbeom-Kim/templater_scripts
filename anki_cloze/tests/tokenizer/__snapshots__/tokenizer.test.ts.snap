@@ -4,290 +4,7 @@ exports[`test list.testcase.ts should tokenize "{"clozify_expect": [Function clo
   - Front = Back
 1. Front - Back
   1. Front = Back
-  2. Front = Back", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "-",
-    "line_pos": 1,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 1,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": "Front",
-    "line_pos": 1,
-    "type": "text",
-  },
-  {
-    "col_pos": 7,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 8,
-    "lexeme": "-",
-    "line_pos": 1,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 9,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 10,
-    "lexeme": "Back",
-    "line_pos": 1,
-    "type": "text",
-  },
-  {
-    "col_pos": 14,
-    "lexeme": "
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "  ",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": "-",
-    "line_pos": 2,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": " ",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 4,
-    "lexeme": "Front",
-    "line_pos": 2,
-    "type": "text",
-  },
-  {
-    "col_pos": 9,
-    "lexeme": " ",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 10,
-    "lexeme": "=",
-    "line_pos": 2,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 11,
-    "lexeme": " ",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 12,
-    "lexeme": "Back",
-    "line_pos": 2,
-    "type": "text",
-  },
-  {
-    "col_pos": 16,
-    "lexeme": "
-",
-    "line_pos": 2,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "1",
-    "line_pos": 3,
-    "type": "number",
-  },
-  {
-    "col_pos": 1,
-    "lexeme": ".",
-    "line_pos": 3,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": " ",
-    "line_pos": 3,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": "Front",
-    "line_pos": 3,
-    "type": "text",
-  },
-  {
-    "col_pos": 8,
-    "lexeme": " ",
-    "line_pos": 3,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 9,
-    "lexeme": "-",
-    "line_pos": 3,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 10,
-    "lexeme": " ",
-    "line_pos": 3,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 11,
-    "lexeme": "Back",
-    "line_pos": 3,
-    "type": "text",
-  },
-  {
-    "col_pos": 15,
-    "lexeme": "
-",
-    "line_pos": 3,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "  ",
-    "line_pos": 4,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": "1",
-    "line_pos": 4,
-    "type": "number",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": ".",
-    "line_pos": 4,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 4,
-    "lexeme": " ",
-    "line_pos": 4,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 5,
-    "lexeme": "Front",
-    "line_pos": 4,
-    "type": "text",
-  },
-  {
-    "col_pos": 10,
-    "lexeme": " ",
-    "line_pos": 4,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 11,
-    "lexeme": "=",
-    "line_pos": 4,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 12,
-    "lexeme": " ",
-    "line_pos": 4,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 13,
-    "lexeme": "Back",
-    "line_pos": 4,
-    "type": "text",
-  },
-  {
-    "col_pos": 17,
-    "lexeme": "
-",
-    "line_pos": 4,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "  ",
-    "line_pos": 5,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": "2",
-    "line_pos": 5,
-    "type": "number",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": ".",
-    "line_pos": 5,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 4,
-    "lexeme": " ",
-    "line_pos": 5,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 5,
-    "lexeme": "Front",
-    "line_pos": 5,
-    "type": "text",
-  },
-  {
-    "col_pos": 10,
-    "lexeme": " ",
-    "line_pos": 5,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 11,
-    "lexeme": "=",
-    "line_pos": 5,
-    "type": "punctuation",
-  },
-  {
-    "col_pos": 12,
-    "lexeme": " ",
-    "line_pos": 5,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 13,
-    "lexeme": "Back",
-    "line_pos": 5,
-    "type": "text",
-  },
-]
-`;
-
-exports[`test list.testcase.ts should tokenize "{"description": "Parse nested list of items", "input": "- Front - Back
-  - Front = Back
-1. Front - Back
-  1. Front = Back
-  2. Front = Back", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+  2. Front = Back", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -567,7 +284,7 @@ exports[`test list.testcase.ts should tokenize "{"description": "Parse nested li
 `;
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Mixed whitespace and newlines", "input": " 	 
- 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+ 	 ", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -593,7 +310,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Multiple newlines", "input": "
 
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -607,7 +324,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 `;
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with newline", "input": "Hello 123
-World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+World", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -643,7 +360,7 @@ World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function to
 ]
 `;
 
-exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with numbers", "input": "123 456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Simple text with numbers", "input": "123 456", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -668,7 +385,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 
 exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Text with mixed whitespace and newlines", "input": "Hello 123
  	World
-456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+456", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -729,7 +446,7 @@ exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clo
 Newlines
 
 
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,
@@ -764,216 +481,7 @@ Newlines
 ]
 `;
 
-exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Whitespace characters", "input": " 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": " 	 ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Mixed whitespace and newlines", "input": " 	 
- 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": " 	 ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": "
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": " 	 ",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Multiple newlines", "input": "
-
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "
-
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Simple text with newline", "input": "Hello 123
-World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "Hello",
-    "line_pos": 1,
-    "type": "text",
-  },
-  {
-    "col_pos": 5,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 6,
-    "lexeme": "123",
-    "line_pos": 1,
-    "type": "number",
-  },
-  {
-    "col_pos": 9,
-    "lexeme": "
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "World",
-    "line_pos": 2,
-    "type": "text",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Simple text with numbers", "input": "123 456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "123",
-    "line_pos": 1,
-    "type": "number",
-  },
-  {
-    "col_pos": 3,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 4,
-    "lexeme": "456",
-    "line_pos": 1,
-    "type": "number",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Text with mixed whitespace and newlines", "input": "Hello 123
- 	World
-456", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "Hello",
-    "line_pos": 1,
-    "type": "text",
-  },
-  {
-    "col_pos": 5,
-    "lexeme": " ",
-    "line_pos": 1,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 6,
-    "lexeme": "123",
-    "line_pos": 1,
-    "type": "number",
-  },
-  {
-    "col_pos": 9,
-    "lexeme": "
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": " 	",
-    "line_pos": 2,
-    "type": "whitespace",
-  },
-  {
-    "col_pos": 2,
-    "lexeme": "World",
-    "line_pos": 2,
-    "type": "text",
-  },
-  {
-    "col_pos": 7,
-    "lexeme": "
-",
-    "line_pos": 2,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "456",
-    "line_pos": 3,
-    "type": "number",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Text with multiple newlines", "input": "Multiple
-
-
-Newlines
-
-
-", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
-[
-  {
-    "col_pos": 0,
-    "lexeme": "Multiple",
-    "line_pos": 1,
-    "type": "text",
-  },
-  {
-    "col_pos": 8,
-    "lexeme": "
-
-
-",
-    "line_pos": 1,
-    "type": "newline",
-  },
-  {
-    "col_pos": 0,
-    "lexeme": "Newlines",
-    "line_pos": 4,
-    "type": "text",
-  },
-  {
-    "col_pos": 8,
-    "lexeme": "
-
-
-",
-    "line_pos": 4,
-    "type": "newline",
-  },
-]
-`;
-
-exports[`test text.testcase.ts should tokenize "{"description": "Whitespace characters", "input": " 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
+exports[`test text.testcase.ts should tokenize "{"clozify_expect": [Function clozify_expect], "description": "Whitespace characters", "input": " 	 ", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   {
     "col_pos": 0,

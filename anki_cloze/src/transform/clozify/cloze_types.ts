@@ -124,7 +124,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
 
     const transformed_node = new ListNode(
       node.ordered,
-      node.indent_level,
+      node.indent,
       node.marker,
       transformed_contents,
       node.endingNewline,

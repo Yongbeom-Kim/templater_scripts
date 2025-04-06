@@ -1,5 +1,6 @@
 import { Token, TokenType } from "../tokenizer/token_types";
 import {
+  IndentNode,
   ListNode,
   ParseTreeNode,
   ParserState,
@@ -40,6 +41,11 @@ const tryParseLine = (
     content,
     endingNewline;
   [newState, indent] = state.consumeOnlyType(TokenType.Whitespace);
+  if (indent.length > 1) {
+    throw new Error(
+      `Asssertion failed in tryParseLine function. Whitespace tokens should all be combined into one token. Indent: "${indent.map((t) => t.lexeme).join("|")}", Token Chain: "${state.peek().map((t) => t.lexeme).join("")}"`,
+    );
+  }
 
   // Check for list markers first
   if (peekUnorderedListMarker(newState) || peekOrderedListMarker(newState)) {
@@ -52,7 +58,7 @@ const tryParseLine = (
       newState,
       new ListNode(
         ordered,
-        getIndentLevel(indent),
+        IndentNode.FromWhitespace(indent[0]),
         marker,
         [TextNode.FromTokens(content)],
         endingNewline,
@@ -68,7 +74,7 @@ const tryParseLine = (
     return [
       newState,
       new TextLineNode(
-        getIndentLevel(indent),
+        IndentNode.FromWhitespace(indent[0]),
         [TextNode.FromTokens(content)],
         endingNewline,
       ),
