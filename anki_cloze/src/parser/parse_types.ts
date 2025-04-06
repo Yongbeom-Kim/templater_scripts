@@ -98,6 +98,29 @@ export abstract class ParseTreeNode {
   visit(visitor: ParseTreeVisitor) {
     visitor.visit(this);
   }
+  abstract toText(): string;
+}
+
+/**
+ * Node that contains some text.
+ * This is the most basic node type.
+ */
+export class TextNode extends ParseTreeNode {
+  type = ParseTreeNodeType.Text;
+  constructor(public readonly contents: Token[]) {
+    super();
+  }
+  toText(): string {
+    return this.contents.map((t) => t.lexeme).join("");
+  }
+
+  static FromToken(token: Token): TextNode {
+    return new TextNode([token]);
+  }
+
+  static FromTokens(tokens: Token[]): TextNode {
+    return new TextNode(tokens);
+  }
 }
 
 /**
@@ -112,10 +135,13 @@ export class TextLineNode extends ParseTreeNode {
 
   constructor(
     public readonly indent_level: number,
-    public readonly contents: Token[],
+    public readonly contents: ParseTreeNode[],
     public readonly endingNewline: Token
   ) {
     super();
+  }
+  toText(): string {
+    return this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme;
   }
 }
 
@@ -126,10 +152,13 @@ export class ListNode extends TextLineNode {
     public readonly ordered: boolean,
     public readonly indent_level: number,
     public readonly marker: Token[],
-    public readonly contents: Token[],
+    public readonly contents: ParseTreeNode[],
     public readonly endingNewline: Token,
     public readonly children: ParseTreeNode[]
   ) {
     super(indent_level, contents, endingNewline);
+  }
+  toText(): string {
+    return this.marker.map((t) => t.lexeme).join("") + " " + this.contents.map((t) => t.toText()).join("") + this.endingNewline.lexeme;
   }
 }

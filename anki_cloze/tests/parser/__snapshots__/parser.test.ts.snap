@@ -9,34 +9,39 @@ exports[`test list.testcase.ts should parse "{"description": "Parse nested list 
   ListNode {
     "children": [],
     "contents": [
-      {
-        "col_pos": 2,
-        "lexeme": "Front",
-        "line_pos": 1,
-        "type": "text",
-      },
-      {
-        "col_pos": 7,
-        "lexeme": " ",
-        "line_pos": 1,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 8,
-        "lexeme": "-",
-        "line_pos": 1,
-        "type": "punctuation",
-      },
-      {
-        "col_pos": 9,
-        "lexeme": " ",
-        "line_pos": 1,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 10,
-        "lexeme": "Back",
-        "line_pos": 1,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 2,
+            "lexeme": "Front",
+            "line_pos": 1,
+            "type": "text",
+          },
+          {
+            "col_pos": 7,
+            "lexeme": " ",
+            "line_pos": 1,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 8,
+            "lexeme": "-",
+            "line_pos": 1,
+            "type": "punctuation",
+          },
+          {
+            "col_pos": 9,
+            "lexeme": " ",
+            "line_pos": 1,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 10,
+            "lexeme": "Back",
+            "line_pos": 1,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -62,34 +67,39 @@ exports[`test list.testcase.ts should parse "{"description": "Parse nested list 
   ListNode {
     "children": [],
     "contents": [
-      {
-        "col_pos": 4,
-        "lexeme": "Front",
-        "line_pos": 2,
-        "type": "text",
-      },
-      {
-        "col_pos": 9,
-        "lexeme": " ",
-        "line_pos": 2,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 10,
-        "lexeme": "=",
-        "line_pos": 2,
-        "type": "punctuation",
-      },
-      {
-        "col_pos": 11,
-        "lexeme": " ",
-        "line_pos": 2,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 12,
-        "lexeme": "Back",
-        "line_pos": 2,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 4,
+            "lexeme": "Front",
+            "line_pos": 2,
+            "type": "text",
+          },
+          {
+            "col_pos": 9,
+            "lexeme": " ",
+            "line_pos": 2,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 10,
+            "lexeme": "=",
+            "line_pos": 2,
+            "type": "punctuation",
+          },
+          {
+            "col_pos": 11,
+            "lexeme": " ",
+            "line_pos": 2,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 12,
+            "lexeme": "Back",
+            "line_pos": 2,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -115,34 +125,39 @@ exports[`test list.testcase.ts should parse "{"description": "Parse nested list 
   ListNode {
     "children": [],
     "contents": [
-      {
-        "col_pos": 3,
-        "lexeme": "Front",
-        "line_pos": 3,
-        "type": "text",
-      },
-      {
-        "col_pos": 8,
-        "lexeme": " ",
-        "line_pos": 3,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 9,
-        "lexeme": "-",
-        "line_pos": 3,
-        "type": "punctuation",
-      },
-      {
-        "col_pos": 10,
-        "lexeme": " ",
-        "line_pos": 3,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 11,
-        "lexeme": "Back",
-        "line_pos": 3,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 3,
+            "lexeme": "Front",
+            "line_pos": 3,
+            "type": "text",
+          },
+          {
+            "col_pos": 8,
+            "lexeme": " ",
+            "line_pos": 3,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 9,
+            "lexeme": "-",
+            "line_pos": 3,
+            "type": "punctuation",
+          },
+          {
+            "col_pos": 10,
+            "lexeme": " ",
+            "line_pos": 3,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 11,
+            "lexeme": "Back",
+            "line_pos": 3,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -174,34 +189,39 @@ exports[`test list.testcase.ts should parse "{"description": "Parse nested list 
   ListNode {
     "children": [],
     "contents": [
-      {
-        "col_pos": 5,
-        "lexeme": "Front",
-        "line_pos": 4,
-        "type": "text",
-      },
-      {
-        "col_pos": 10,
-        "lexeme": " ",
-        "line_pos": 4,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 11,
-        "lexeme": "=",
-        "line_pos": 4,
-        "type": "punctuation",
-      },
-      {
-        "col_pos": 12,
-        "lexeme": " ",
-        "line_pos": 4,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 13,
-        "lexeme": "Back",
-        "line_pos": 4,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 5,
+            "lexeme": "Front",
+            "line_pos": 4,
+            "type": "text",
+          },
+          {
+            "col_pos": 10,
+            "lexeme": " ",
+            "line_pos": 4,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 11,
+            "lexeme": "=",
+            "line_pos": 4,
+            "type": "punctuation",
+          },
+          {
+            "col_pos": 12,
+            "lexeme": " ",
+            "line_pos": 4,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 13,
+            "lexeme": "Back",
+            "line_pos": 4,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -233,34 +253,39 @@ exports[`test list.testcase.ts should parse "{"description": "Parse nested list 
   ListNode {
     "children": [],
     "contents": [
-      {
-        "col_pos": 5,
-        "lexeme": "Front",
-        "line_pos": 5,
-        "type": "text",
-      },
-      {
-        "col_pos": 10,
-        "lexeme": " ",
-        "line_pos": 5,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 11,
-        "lexeme": "=",
-        "line_pos": 5,
-        "type": "punctuation",
-      },
-      {
-        "col_pos": 12,
-        "lexeme": " ",
-        "line_pos": 5,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 13,
-        "lexeme": "Back",
-        "line_pos": 5,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 5,
+            "lexeme": "Front",
+            "line_pos": 5,
+            "type": "text",
+          },
+          {
+            "col_pos": 10,
+            "lexeme": " ",
+            "line_pos": 5,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 11,
+            "lexeme": "=",
+            "line_pos": 5,
+            "type": "punctuation",
+          },
+          {
+            "col_pos": 12,
+            "lexeme": " ",
+            "line_pos": 5,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 13,
+            "lexeme": "Back",
+            "line_pos": 5,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -290,7 +315,12 @@ exports[`test text.testcase.ts should parse "{"description": "Mixed whitespace a
  	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
-    "contents": [],
+    "contents": [
+      TextNode {
+        "contents": [],
+        "type": "text",
+      },
+    ],
     "endingNewline": {
       "col_pos": 3,
       "lexeme": "
@@ -302,7 +332,12 @@ exports[`test text.testcase.ts should parse "{"description": "Mixed whitespace a
     "type": "text",
   },
   TextLineNode {
-    "contents": [],
+    "contents": [
+      TextNode {
+        "contents": [],
+        "type": "text",
+      },
+    ],
     "endingNewline": undefined,
     "indent_level": 2,
     "type": "text",
@@ -315,7 +350,12 @@ exports[`test text.testcase.ts should parse "{"description": "Multiple newlines"
 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
-    "contents": [],
+    "contents": [
+      TextNode {
+        "contents": [],
+        "type": "text",
+      },
+    ],
     "endingNewline": {
       "col_pos": 0,
       "lexeme": "
@@ -335,23 +375,28 @@ World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function to
 [
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "Hello",
-        "line_pos": 1,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "Hello",
+            "line_pos": 1,
+            "type": "text",
+          },
+          {
+            "col_pos": 5,
+            "lexeme": " ",
+            "line_pos": 1,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 6,
+            "lexeme": "123",
+            "line_pos": 1,
+            "type": "number",
+          },
+        ],
         "type": "text",
-      },
-      {
-        "col_pos": 5,
-        "lexeme": " ",
-        "line_pos": 1,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 6,
-        "lexeme": "123",
-        "line_pos": 1,
-        "type": "number",
       },
     ],
     "endingNewline": {
@@ -366,10 +411,15 @@ World", "parse_expect": [Function parse_expect], "tokenize_expect": [Function to
   },
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "World",
-        "line_pos": 2,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "World",
+            "line_pos": 2,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -384,23 +434,28 @@ exports[`test text.testcase.ts should parse "{"description": "Simple text with n
 [
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "123",
-        "line_pos": 1,
-        "type": "number",
-      },
-      {
-        "col_pos": 3,
-        "lexeme": " ",
-        "line_pos": 1,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 4,
-        "lexeme": "456",
-        "line_pos": 1,
-        "type": "number",
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "123",
+            "line_pos": 1,
+            "type": "number",
+          },
+          {
+            "col_pos": 3,
+            "lexeme": " ",
+            "line_pos": 1,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 4,
+            "lexeme": "456",
+            "line_pos": 1,
+            "type": "number",
+          },
+        ],
+        "type": "text",
       },
     ],
     "endingNewline": undefined,
@@ -416,23 +471,28 @@ exports[`test text.testcase.ts should parse "{"description": "Text with mixed wh
 [
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "Hello",
-        "line_pos": 1,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "Hello",
+            "line_pos": 1,
+            "type": "text",
+          },
+          {
+            "col_pos": 5,
+            "lexeme": " ",
+            "line_pos": 1,
+            "type": "whitespace",
+          },
+          {
+            "col_pos": 6,
+            "lexeme": "123",
+            "line_pos": 1,
+            "type": "number",
+          },
+        ],
         "type": "text",
-      },
-      {
-        "col_pos": 5,
-        "lexeme": " ",
-        "line_pos": 1,
-        "type": "whitespace",
-      },
-      {
-        "col_pos": 6,
-        "lexeme": "123",
-        "line_pos": 1,
-        "type": "number",
       },
     ],
     "endingNewline": {
@@ -447,10 +507,15 @@ exports[`test text.testcase.ts should parse "{"description": "Text with mixed wh
   },
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 2,
-        "lexeme": "World",
-        "line_pos": 2,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 2,
+            "lexeme": "World",
+            "line_pos": 2,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -466,11 +531,16 @@ exports[`test text.testcase.ts should parse "{"description": "Text with mixed wh
   },
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "456",
-        "line_pos": 3,
-        "type": "number",
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "456",
+            "line_pos": 3,
+            "type": "number",
+          },
+        ],
+        "type": "text",
       },
     ],
     "endingNewline": undefined,
@@ -490,10 +560,15 @@ Newlines
 [
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "Multiple",
-        "line_pos": 1,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "Multiple",
+            "line_pos": 1,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -511,10 +586,15 @@ Newlines
   },
   TextLineNode {
     "contents": [
-      {
-        "col_pos": 0,
-        "lexeme": "Newlines",
-        "line_pos": 4,
+      TextNode {
+        "contents": [
+          {
+            "col_pos": 0,
+            "lexeme": "Newlines",
+            "line_pos": 4,
+            "type": "text",
+          },
+        ],
         "type": "text",
       },
     ],
@@ -536,7 +616,12 @@ Newlines
 exports[`test text.testcase.ts should parse "{"description": "Whitespace characters", "input": " 	 ", "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
   TextLineNode {
-    "contents": [],
+    "contents": [
+      TextNode {
+        "contents": [],
+        "type": "text",
+      },
+    ],
     "endingNewline": undefined,
     "indent_level": 2,
     "type": "text",

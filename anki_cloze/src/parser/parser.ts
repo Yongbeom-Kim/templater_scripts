@@ -1,5 +1,5 @@
 import { Token, TokenType } from "../tokenizer/token_types";
-import { ListNode, ParseTreeNode, ParserState, TextLineNode } from "./parse_types";
+import { ListNode, ParseTreeNode, ParserState, TextLineNode, TextNode } from "./parse_types";
 
 export const parse = (tokens: Token[]): ParseTreeNode[] => {
   const result: ParseTreeNode[] = [];
@@ -36,14 +36,14 @@ const tryParseLine = (
     [newState] = newState.consume();
     [newState, content] = newState.consumeUntilType(TokenType.Newline, false);
     [newState, [endingNewline]] = newState.consume();
-    return [newState, new ListNode(ordered, getIndentLevel(indent), marker, content, endingNewline, [])];
+    return [newState, new ListNode(ordered, getIndentLevel(indent), marker, [TextNode.FromTokens(content)], endingNewline, [])];
   } 
   
   // If not a list, treat as regular text line
   [newState, content] = newState.consumeUntilType(TokenType.Newline, false);
   [newState, [endingNewline]] = newState.consume();
   if (content.length > 0 || endingNewline || newState.eof()) {
-    return [newState, new TextLineNode(getIndentLevel(indent), content, endingNewline)];
+    return [newState, new TextLineNode(getIndentLevel(indent), [TextNode.FromTokens(content)], endingNewline)];
   }
 
   console.warn(`Start of line, but no tokens found. This should be unreachable. ${newState.debug()}`);
