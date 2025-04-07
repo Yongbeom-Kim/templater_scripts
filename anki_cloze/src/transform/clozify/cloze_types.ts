@@ -6,6 +6,7 @@ import {
   TextNode,
   CodeLineNode,
   IndentNode,
+  CodeBlockLanguage,
 } from "../../parser/parse_types";
 
 import { ParseTreeNode } from "../../parser/parse_types";
@@ -178,7 +179,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
         `Expected the same number of children as the original node. ${this.debug()}`,
       );
     }
-    const transformed_node = new CodeBlockNode(
+    const transformed_node = new ClozeCodeBlockNode(
       node.language_str,
       node.language,
       children,
@@ -205,6 +206,24 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   }
 }
 
+export class ClozeCodeBlockNode extends CodeBlockNode {
+  type = ParseTreeNodeType.CodeBlock;
+  constructor(
+    public readonly language_str: string,
+    public readonly language: CodeBlockLanguage,
+    public readonly contents: ParseTreeNode[],
+  ) {
+    super(language_str, language, contents);
+  }
+
+  toText(): string {
+    return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${this.language}">\n${this.contents.map((t) => t.toText()).join("")}</code>\n</pre>`;
+  }
+
+  clone(): ClozeCodeBlockNode {
+    return new ClozeCodeBlockNode(this.language_str, this.language, this.contents.map((t) => t.clone()));
+  }
+}
 /**
  * A text node that is specifically for cloze deletion.
  *
@@ -252,7 +271,8 @@ export class ClozeCodeLineNode extends CodeLineNode {
     super(indent, contents, endingNewline);
   }
   toText(): string {
-    return `{{c${this.cloze_number}$::${super.toText()}}}`;
+    return `{{c${this.cloze_number}::${this.indent.toText() +
+      this.contents.map((t) => t.toText()).join("")}}}${this.endingNewline?.lexeme ?? ""}`;
   }
 
   static FromCodeLineNode(

@@ -34,7 +34,7 @@ export const tokenize = (text: string): Token[] => {
 };
 
 const isText = (c: string): boolean => {
-  return !!c.match(/[a-zA-Z]/);
+  return !!c.match(/[a-zA-Z_]/);
 };
 
 const isDigit = (c: string): boolean => {

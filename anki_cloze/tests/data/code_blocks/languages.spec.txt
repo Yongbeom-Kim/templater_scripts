@@ -1,0 +1,530 @@
+name: CSS (css) /* comment */
+flags: {}
+input:
+```css
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-css">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: C (c) // comment
+flags: {}
+input:
+```c
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-c">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+
+---
+name: C (c) /* comment */
+flags: {}
+input:
+```c
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-c">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: C++ (cpp) // comment
+flags: {}
+input:
+```cpp
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-cpp">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+
+---
+name: C++ (cpp) /* comment */
+flags: {}
+input:
+```cpp
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-cpp">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: C++ (c++) // comment
+flags: {}
+input:
+```c++
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-cpp">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+
+---
+name: C++ (c++) /* comment */
+flags: {}
+input:
+```c++
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-cpp">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Go (go) // comment
+flags: {}
+input:
+```go
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-go">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+
+---
+name: Go (go) /* comment */
+flags: {}
+input:
+```go
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-go">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Groovy (groovy) // comment
+flags: {}
+input:
+```groovy
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-groovy">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+
+---
+name: Groovy (groovy) /* comment */
+flags: {}
+input:
+```groovy
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-groovy">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: HCL (hcl) # comment
+flags: {}
+input:
+```hcl
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-hcl">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: HCL (hcl) // comment
+flags: {}
+input:
+```hcl
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-hcl">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: HCL (hcl) /* comment */
+flags: {}
+input:
+```hcl
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-hcl">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Javascript (javascript) /* comment */
+flags: {}
+input:
+```javascript
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-javascript">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Javascript (javascript) // comment
+flags: {}
+input:
+```javascript
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-javascript">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Javascript (js) /* comment */
+flags: {}
+input:
+```js
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-javascript">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Javascript (js) // comment
+flags: {}
+input:
+```js
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-javascript">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Jsx (jsx) /* comment */
+flags: {}
+input:
+```jsx
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-jsx">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Jsx (jsx) // comment
+flags: {}
+input:
+```jsx
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-jsx">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Tsx (tsx) /* comment */
+flags: {}
+input:
+```tsx
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-tsx">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Tsx (tsx) // comment
+flags: {}
+input:
+```tsx
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-tsx">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Typescript (ts) /* comment */
+flags: {}
+input:
+```ts
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-typescript">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Typescript (ts) // comment
+flags: {}
+input:
+```ts
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-typescript">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Typescript (typescript) /* comment */
+flags: {}
+input:
+```typescript
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-typescript">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Typescript (typescript) // comment
+flags: {}
+input:
+```typescript
+// comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-typescript">
+// comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Python (py) # comment
+flags: {}
+input:
+```py
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Python (python) # comment
+flags: {}
+input:
+```python
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: PL/SQL (plsql) -- comment
+flags: {}
+input:
+```plsql
+-- comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-plsql">
+-- comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: PL/SQL (plsql) /* comment */
+flags: {}
+input:
+```plsql
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-plsql">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: SQL (sql) -- comment
+flags: {}
+input:
+```sql
+-- comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-sql">
+-- comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: SQL (sql) /* comment */
+flags: {}
+input:
+```sql
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-sql">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: TOML (toml) # comment
+flags: {}
+input:
+```toml
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-toml">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Yaml (yaml) # comment
+flags: {}
+input:
+```yaml
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-yaml">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: Yaml (yml) # comment
+flags: {}
+input:
+```yml
+# comment
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-yaml">
+# comment
+{{c1::some_code}}
+</code>
+</pre>
+---

@@ -3,7 +3,7 @@ import { Token, TokenType } from "../tokenizer/token_types";
 export class ParserState {
   constructor(
     public readonly tokens: Token[],
-    public readonly next: number = 0,
+    public readonly next: number = 0
   ) {}
 
   good(): boolean {
@@ -29,7 +29,7 @@ export class ParserState {
     return [
       new ParserState(
         this.tokens,
-        Math.min(this.next + n_tokens, this.tokens.length),
+        Math.min(this.next + n_tokens, this.tokens.length)
       ),
       result,
     ];
@@ -37,7 +37,7 @@ export class ParserState {
 
   consumeUntilType(
     type: TokenType,
-    include: boolean = false,
+    include: boolean = false
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -62,7 +62,7 @@ export class ParserState {
 
   consumeUntilLexeme(
     lexeme: string,
-    include: boolean = false,
+    include: boolean = false
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -186,7 +186,7 @@ export class TextLineNode extends ParseTreeNode {
   constructor(
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline?: Token, // undefined if EOF
+    public readonly endingNewline?: Token // undefined if EOF
   ) {
     super();
   }
@@ -212,7 +212,7 @@ export class ListNode extends TextLineNode {
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline?: Token, // undefined if EOF
-    public readonly children: ParseTreeNode[] = [],
+    public readonly children: ParseTreeNode[] = []
   ) {
     super(indent, contents, endingNewline); // This should combine indent + marker + contents, but it's okay since we don't rely on the inheritance.
   }
@@ -233,44 +233,81 @@ export class ListNode extends TextLineNode {
       this.marker,
       this.contents,
       this.endingNewline,
-      this.children,
+      this.children
     );
   }
 }
 
 export enum CodeBlockLanguage {
-  None = "",
+  Css = "css",
+  C = "c",
+  Cpp = "cpp",
+  Go = "go",
+  Groovy = "groovy",
+  Hcl = "hcl",
+  JavaScript = "javascript",
+  Jsx = "jsx",
+  TypeScript = "typescript",
+  Tsx = "tsx",
   Python = "python",
-  Cpp = "c++",
+  Plsql = "plsql",
+  Sql = "sql",
+  Toml = "toml",
+  Yaml = "yaml",
+  None = "",
 }
 
 export namespace CodeBlockLanguage {
-  export const FromToken = (token?: Token): CodeBlockLanguage => {
-    if (!token) {
+  // TODO: move to parser, this shouldn't be here
+  export const FromKeyword = (keyword?: string): CodeBlockLanguage => {
+    if (!keyword) {
       console.warn(
-        "No token provided when parsing code block language. Expected a newline token or a language name.",
+        "No keyword provided when parsing code block language. Expected a language name."
       );
       return CodeBlockLanguage.None;
     }
-    if (token.type === TokenType.Newline) {
-      return CodeBlockLanguage.None;
+    switch (keyword.toLowerCase()) {
+      case "css":
+        return CodeBlockLanguage.Css;
+      case "c":
+        return CodeBlockLanguage.C;
+      case "cpp":
+      case "c++":
+        return CodeBlockLanguage.Cpp;
+      case "go":
+        return CodeBlockLanguage.Go;
+      case "groovy":
+        return CodeBlockLanguage.Groovy;
+      case "hcl":
+        return CodeBlockLanguage.Hcl;
+      case "javascript":
+      case "js":
+        return CodeBlockLanguage.JavaScript;
+      case "jsx":
+        return CodeBlockLanguage.Jsx;
+      case "typescript":
+      case "ts":
+        return CodeBlockLanguage.TypeScript;
+      case "tsx":
+        return CodeBlockLanguage.Tsx;
+      case "python":
+      case "py":
+        return CodeBlockLanguage.Python;
+      case "plsql":
+        return CodeBlockLanguage.Plsql;
+      case "sql":
+        return CodeBlockLanguage.Sql;
+      case "toml":
+        return CodeBlockLanguage.Toml;
+      case "yaml":
+      case "yml":
+        return CodeBlockLanguage.Yaml;
+      default:
+        console.warn(
+          `Unrecognized keyword when parsing code block language: ${keyword}`
+        );
+        return CodeBlockLanguage.None;
     }
-    if (token.type === TokenType.Text) {
-      switch (token.lexeme) {
-        case "py":
-        case "python":
-          return CodeBlockLanguage.Python;
-        case "cpp":
-        case "c++":
-          return CodeBlockLanguage.Cpp;
-        default:
-          return CodeBlockLanguage.None;
-      }
-    }
-    console.warn(
-      `Unrecognized token type when parsing code block language: ${token.type}, lexeme: ${token.lexeme}`,
-    );
-    return CodeBlockLanguage.None;
   };
 }
 
@@ -279,7 +316,7 @@ export class CodeBlockNode extends ParseTreeNode {
   constructor(
     public readonly language_str: string,
     public readonly language: CodeBlockLanguage,
-    public readonly contents: ParseTreeNode[],
+    public readonly contents: ParseTreeNode[]
   ) {
     super();
     for (const content of contents) {
@@ -288,20 +325,22 @@ export class CodeBlockNode extends ParseTreeNode {
         content.type !== ParseTreeNodeType.CodeComment
       ) {
         throw new Error(
-          "Code block contents must be code line or code comment nodes",
+          "Code block contents must be code line or code comment nodes"
         );
       }
     }
   }
 
   toText(): string {
-    return `\`\`\`${this.language_str}\n${this.contents.map((t) => t.toText()).join("")}\`\`\``;
+    return `\`\`\`${this.language_str}\n${this.contents
+      .map((t) => t.toText())
+      .join("")}\`\`\``;
   }
   clone(): ParseTreeNode {
     return new CodeBlockNode(
       this.language_str,
       this.language,
-      this.contents.map((t) => t.clone()),
+      this.contents.map((t) => t.clone())
     );
   }
 }
@@ -311,7 +350,7 @@ export class CodeLineNode extends ParseTreeNode {
   constructor(
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline?: Token, // undefined if EOF
+    public readonly endingNewline?: Token // undefined if EOF
   ) {
     super();
   }

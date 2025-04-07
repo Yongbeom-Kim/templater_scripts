@@ -61,16 +61,13 @@ const tryParseCodeBlock = (
   ) {
     return [backupState, null];
   }
-  if (peeked.length != 2 && peeked.length != 3) {
-    return [backupState, null];
-  }
   backTick = peeked[0];
   if (peeked.length == 2) {
     language = CodeBlockLanguage.None;
     language_str = "";
   } else {
-    language = CodeBlockLanguage.FromToken(peeked[1]);
-    language_str = peeked[1].lexeme;
+    language_str = peeked.slice(1).map((t) => t.lexeme).join("").trim();
+    language = CodeBlockLanguage.FromKeyword(language_str);
   }
 
   // parse body
