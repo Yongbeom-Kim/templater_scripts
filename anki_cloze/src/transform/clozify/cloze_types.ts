@@ -31,7 +31,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
     }
     if (this._transformedNodes.length != prevTransformedNodesLength + 1) {
       throw new Error(
-        `Expected 1 node to be added to the transformed nodes every visit. ${this.debug()}`
+        `Expected 1 node to be added to the transformed nodes every visit. ${this.debug()}`,
       );
     }
   }
@@ -41,7 +41,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitTextNode(node: TextNode): void {
     if (node instanceof ClozeTextNode) {
       throw new Error(
-        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`
+        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`,
       );
     }
     this._visitStack.push(node);
@@ -52,13 +52,13 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   clozifyTextNode(node: TextNode, front: boolean): void {
     if (node instanceof ClozeTextNode) {
       throw new Error(
-        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`
+        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`,
       );
     }
     const cloze_node = new ClozeTextNode(
       node.contents,
       this._cloze_number,
-      front
+      front,
     );
     this._visitStack.push(node);
     this._transformedNodes.push(cloze_node);
@@ -83,17 +83,17 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitListNode(node: ListNode): void {
     if (node.contents.length !== 1) {
       throw new Error(
-        `TextLineNode (before transformation) can only have one child. ${this.debug()}`
+        `TextLineNode (before transformation) can only have one child. ${this.debug()}`,
       );
     }
     if (node.contents[0] instanceof ClozeTextNode) {
       throw new Error(
-        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`
+        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`,
       );
     }
     if (!(node.contents[0] instanceof TextNode)) {
       throw new Error(
-        `TextLineNode (before transformation) can only have one child that is a TextNode. ${this.debug()}`
+        `TextLineNode (before transformation) can only have one child that is a TextNode. ${this.debug()}`,
       );
     }
     this._visitStack.push(node);
@@ -133,7 +133,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       node.marker,
       transformed_contents,
       node.endingNewline,
-      transformedChildren
+      transformedChildren,
     );
     this._transformedNodes.push(transformed_node);
 
@@ -143,13 +143,13 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitCodeBlockNode(node: CodeBlockNode): void {
     this._visitStack.push(node);
     let convertCloze = false;
-    const children = []
+    const children = [];
     for (let i = 0; i < node.contents.length; i++) {
       const child = node.contents[i];
       if (child.type === ParseTreeNodeType.CodeComment) {
         while (
-          i+1 < node.contents.length &&
-          node.contents[i+1].type === ParseTreeNodeType.CodeComment
+          i + 1 < node.contents.length &&
+          node.contents[i + 1].type === ParseTreeNodeType.CodeComment
         ) {
           children.push(node.contents[i]);
           i++;
@@ -165,16 +165,24 @@ export class ClozifyVisitor extends ParseTreeVisitor {
         }
 
         if (!child.empty() && convertCloze) {
-          children.push(ClozeCodeLineNode.FromCodeLineNode(child, this._cloze_number));
-          continue
+          children.push(
+            ClozeCodeLineNode.FromCodeLineNode(child, this._cloze_number),
+          );
+          continue;
         }
       }
       children.push(child);
     }
     if (children.length !== node.contents.length) {
-      throw new Error(`Expected the same number of children as the original node. ${this.debug()}`);
+      throw new Error(
+        `Expected the same number of children as the original node. ${this.debug()}`,
+      );
     }
-    const transformed_node = new CodeBlockNode(node.language_str, node.language, children);
+    const transformed_node = new CodeBlockNode(
+      node.language_str,
+      node.language,
+      children,
+    );
     this._transformedNodes.push(transformed_node);
     this._visitStack.pop();
   }
@@ -217,7 +225,7 @@ export class ClozeTextNode extends TextNode {
   constructor(
     public readonly contents: Token[],
     public readonly cloze_number: number,
-    public readonly front: boolean
+    public readonly front: boolean,
   ) {
     super(contents);
   }
@@ -233,14 +241,13 @@ export class ClozeTextNode extends TextNode {
   }
 }
 
-
 export class ClozeCodeLineNode extends CodeLineNode {
   type = ParseTreeNodeType.CodeLine;
   constructor(
     public readonly cloze_number: number,
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline?: Token // undefined if EOF
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super(indent, contents, endingNewline);
   }
@@ -248,9 +255,15 @@ export class ClozeCodeLineNode extends CodeLineNode {
     return `{{c${this.cloze_number}$::${super.toText()}}}`;
   }
 
-  static FromCodeLineNode(node: CodeLineNode, cloze_number: number): ClozeCodeLineNode {
-    return new ClozeCodeLineNode(cloze_number, node.indent, node.contents, node.endingNewline);
+  static FromCodeLineNode(
+    node: CodeLineNode,
+    cloze_number: number,
+  ): ClozeCodeLineNode {
+    return new ClozeCodeLineNode(
+      cloze_number,
+      node.indent,
+      node.contents,
+      node.endingNewline,
+    );
   }
-  
-  
 }

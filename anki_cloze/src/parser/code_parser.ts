@@ -1,9 +1,14 @@
-import { Token, TokenType } from "../tokenizer/token_types"
+import { Token, TokenType } from "../tokenizer/token_types";
 import { CodeBlockLanguage, ParserState } from "./parse_types";
 
-export const isComment = (language: CodeBlockLanguage, state: ParserState): boolean => {
+export const isComment = (
+  language: CodeBlockLanguage,
+  state: ParserState,
+): boolean => {
   if (state.eof()) {
-    throw new Error(`Parser state in EOF in middle of code block. ${state.debug()}`);
+    throw new Error(
+      `Parser state in EOF in middle of code block. ${state.debug()}`,
+    );
   }
 
   [state] = state.consumeOnlyType(TokenType.Whitespace);
@@ -18,4 +23,4 @@ export const isComment = (language: CodeBlockLanguage, state: ParserState): bool
     default:
       return false;
   }
-}
+};

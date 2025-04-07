@@ -1,6 +1,15 @@
-import { CodeBlockLanguage, CodeBlockNode, CodeLineNode, ParseTreeNode, ParseTreeNodeType } from "../../src/parser/parse_types";
+import {
+  CodeBlockLanguage,
+  CodeBlockNode,
+  CodeLineNode,
+  ParseTreeNode,
+  ParseTreeNodeType,
+} from "../../src/parser/parse_types";
 import { Token } from "../../src/tokenizer/token_types";
-import { ClozeCodeLineNode, ClozeTextNode } from "../../src/transform/clozify/cloze_types";
+import {
+  ClozeCodeLineNode,
+  ClozeTextNode,
+} from "../../src/transform/clozify/cloze_types";
 import { TestCase } from "./types";
 
 const TRIPLE_QUOTE = "```";
@@ -13,34 +22,52 @@ def x():
   print("Hello, world!")
   # Comment
 ${TRIPLE_QUOTE}
-    `.trim(),  
+    `.trim(),
     tokenize_expect: () => {},
     parse_expect: (result: ParseTreeNode[]) => {
       expect(result.length).toBe(1);
       expect(result[0].type).toBe(ParseTreeNodeType.CodeBlock);
-      expect((result[0] as CodeBlockNode).language).toBe(CodeBlockLanguage.Python);
+      expect((result[0] as CodeBlockNode).language).toBe(
+        CodeBlockLanguage.Python,
+      );
       expect((result[0] as CodeBlockNode).contents.length).toBe(3);
-      expect((result[0] as CodeBlockNode).contents[0].type).toBe(ParseTreeNodeType.CodeLine);
-      expect((result[0] as CodeBlockNode).contents[1].type).toBe(ParseTreeNodeType.CodeLine);
-      expect((result[0] as CodeBlockNode).contents[2].type).toBe(ParseTreeNodeType.CodeComment);
+      expect((result[0] as CodeBlockNode).contents[0].type).toBe(
+        ParseTreeNodeType.CodeLine,
+      );
+      expect((result[0] as CodeBlockNode).contents[1].type).toBe(
+        ParseTreeNodeType.CodeLine,
+      );
+      expect((result[0] as CodeBlockNode).contents[2].type).toBe(
+        ParseTreeNodeType.CodeComment,
+      );
     },
     clozify_expect: (result: ParseTreeNode[]) => {
       expect(result.length).toBe(1);
       expect(result[0].type).toBe(ParseTreeNodeType.CodeBlock);
-      expect((result[0] as CodeBlockNode).language).toBe(CodeBlockLanguage.Python);
+      expect((result[0] as CodeBlockNode).language).toBe(
+        CodeBlockLanguage.Python,
+      );
       expect((result[0] as CodeBlockNode).contents.length).toBe(3);
-      expect((result[0] as CodeBlockNode).contents[0].type).toBe(ParseTreeNodeType.CodeLine);
-      expect((result[0] as CodeBlockNode).contents[1].type).toBe(ParseTreeNodeType.CodeLine);
-      expect((result[0] as CodeBlockNode).contents[2].type).toBe(ParseTreeNodeType.CodeComment);
+      expect((result[0] as CodeBlockNode).contents[0].type).toBe(
+        ParseTreeNodeType.CodeLine,
+      );
+      expect((result[0] as CodeBlockNode).contents[1].type).toBe(
+        ParseTreeNodeType.CodeLine,
+      );
+      expect((result[0] as CodeBlockNode).contents[2].type).toBe(
+        ParseTreeNodeType.CodeComment,
+      );
     },
     main_expect: (result: string) => {
-      expect(result).toBe(`
+      expect(result).toBe(
+        `
 ${TRIPLE_QUOTE}python
 def x():
   print("Hello, world!")
   # Comment
 ${TRIPLE_QUOTE}
-    `.trim())
+    `.trim(),
+      );
     },
   },
 
@@ -61,17 +88,23 @@ ${TRIPLE_QUOTE}
     `.trim(),
     tokenize_expect: () => {},
     parse_expect: (result: ParseTreeNode[]) => {
-      console.log(JSON.stringify((result[0] as CodeBlockNode).contents.map((t) => t.toText()), null, 2));
+      console.log(
+        JSON.stringify(
+          (result[0] as CodeBlockNode).contents.map((t) => t.toText()),
+          null,
+          2,
+        ),
+      );
       expect(result.length).toBe(1);
       expect(result[0].type).toBe(ParseTreeNodeType.CodeBlock);
       expect((result[0] as CodeBlockNode).language).toBe(CodeBlockLanguage.Cpp);
       expect((result[0] as CodeBlockNode).contents.length).toBe(9);
       for (const i of [0, 4]) {
-        const node = (result[0] as CodeBlockNode).contents[i]
+        const node = (result[0] as CodeBlockNode).contents[i];
         expect(node.type).toBe(ParseTreeNodeType.CodeComment);
       }
       for (const i of [1, 2, 3, 5, 6, 7, 8]) {
-        const node = (result[0] as CodeBlockNode).contents[i]
+        const node = (result[0] as CodeBlockNode).contents[i];
         expect(node.type).toBe(ParseTreeNodeType.CodeLine);
       }
     },
@@ -82,21 +115,22 @@ ${TRIPLE_QUOTE}
       expect((result[0] as CodeBlockNode).language).toBe(CodeBlockLanguage.Cpp);
       expect((result[0] as CodeBlockNode).contents.length).toBe(9);
       for (const i of [0, 4]) {
-        const node = (result[0] as CodeBlockNode).contents[i]
+        const node = (result[0] as CodeBlockNode).contents[i];
         expect(node.type).toBe(ParseTreeNodeType.CodeComment);
       }
       for (const i of [1, 2, 3, 5, 6, 7, 8]) {
-        const node = (result[0] as CodeBlockNode).contents[i]
+        const node = (result[0] as CodeBlockNode).contents[i];
         expect(node.type).toBe(ParseTreeNodeType.CodeLine);
       }
       // Verify cloze deletions are added
       for (const i of [1, 5, 6]) {
-        const node = (result[0] as CodeBlockNode).contents[i]
+        const node = (result[0] as CodeBlockNode).contents[i];
         expect(node).toBeInstanceOf(ClozeCodeLineNode);
       }
     },
     main_expect: (result: string) => {
-      expect(result).toBe(`
+      expect(result).toBe(
+        `
 ${TRIPLE_QUOTE}cpp
 /* multi-line comment */
 {{c1::#include <iostream>}}
@@ -108,7 +142,8 @@ int main() {
   
 }
 ${TRIPLE_QUOTE}
-      `.trim())
+      `.trim(),
+      );
     },
-  }
+  },
 ];

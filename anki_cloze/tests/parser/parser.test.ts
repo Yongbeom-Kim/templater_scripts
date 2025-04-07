@@ -14,7 +14,7 @@ describe("test text.testcase.ts", () => {
       parse_expect(parseTree);
       expect(ParseTreeNode.toText(parseTree)).toEqual(input);
       expect(parseTree).toMatchSnapshot();
-    }
+    },
   );
 });
 
@@ -27,7 +27,7 @@ describe("test list.testcase.ts", () => {
       parse_expect(parseTree);
       expect(ParseTreeNode.toText(parseTree)).toEqual(input);
       expect(parseTree).toMatchSnapshot();
-    }
+    },
   );
 });
 
@@ -40,6 +40,6 @@ describe("test code_block.testcase.ts", () => {
       parse_expect(parseTree);
       expect(ParseTreeNode.toText(parseTree)).toEqual(input);
       expect(parseTree).toMatchSnapshot();
-    }
+    },
   );
 });
