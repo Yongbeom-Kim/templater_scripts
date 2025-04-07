@@ -221,7 +221,11 @@ export class ClozeCodeBlockNode extends CodeBlockNode {
   }
 
   clone(): ClozeCodeBlockNode {
-    return new ClozeCodeBlockNode(this.language_str, this.language, this.contents.map((t) => t.clone()));
+    return new ClozeCodeBlockNode(
+      this.language_str,
+      this.language,
+      this.contents.map((t) => t.clone()),
+    );
   }
 }
 /**
@@ -271,8 +275,9 @@ export class ClozeCodeLineNode extends CodeLineNode {
     super(indent, contents, endingNewline);
   }
   toText(): string {
-    return `{{c${this.cloze_number}::${this.indent.toText() +
-      this.contents.map((t) => t.toText()).join("")}}}${this.endingNewline?.lexeme ?? ""}`;
+    return `{{c${this.cloze_number}::${
+      this.indent.toText() + this.contents.map((t) => t.toText()).join("")
+    }}}${this.endingNewline?.lexeme ?? ""}`;
   }
 
   static FromCodeLineNode(

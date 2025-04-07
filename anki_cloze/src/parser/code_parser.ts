@@ -3,11 +3,11 @@ import { CodeBlockLanguage, ParserState } from "./parse_types";
 
 export const isComment = (
   language: CodeBlockLanguage,
-  state: ParserState
+  state: ParserState,
 ): boolean => {
   if (state.eof()) {
     throw new Error(
-      `Parser state in EOF in middle of code block. ${state.debug()}`
+      `Parser state in EOF in middle of code block. ${state.debug()}`,
     );
   }
 

@@ -12,7 +12,7 @@ int main() {
 }
 \`\`\`", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
-  CodeBlockNode {
+  ClozeCodeBlockNode {
     "contents": [
       CodeCommentNode {
         "contents": [
@@ -579,7 +579,7 @@ int main() {
         "type": "code_line",
       },
     ],
-    "language": "c++",
+    "language": "cpp",
     "language_str": "cpp",
     "type": "code_block",
   },
@@ -592,7 +592,7 @@ def x():
   # Comment
 \`\`\`", "main_expect": [Function main_expect], "parse_expect": [Function parse_expect], "tokenize_expect": [Function tokenize_expect]}" correctly 1`] = `
 [
-  CodeBlockNode {
+  ClozeCodeBlockNode {
     "contents": [
       CodeLineNode {
         "contents": [

@@ -23,15 +23,17 @@ describe("test list.testcase.ts", () => {
   );
 });
 
-describe('test spec', () => {
-  describe('code_blocks', () => {
-    describe('languages.spec.txt', () => {
-      const testCases = parseSpecFile('tests/data/code_blocks/languages.spec.txt');
-      it.each(testCases)('$name', ({ input, expected }) => {
+describe("test spec", () => {
+  describe("code_blocks", () => {
+    describe("languages.spec.txt", () => {
+      const testCases = parseSpecFile(
+        "tests/data/code_blocks/languages.spec.txt",
+      );
+      it.each(testCases)("$name", ({ input, expected }) => {
         const output = clozify(input);
         console.log(input);
         expect(output).toBe(expected);
       });
-    })
-  })
-})
+    });
+  });
+});

@@ -66,7 +66,11 @@ const tryParseCodeBlock = (
     language = CodeBlockLanguage.None;
     language_str = "";
   } else {
-    language_str = peeked.slice(1).map((t) => t.lexeme).join("").trim();
+    language_str = peeked
+      .slice(1)
+      .map((t) => t.lexeme)
+      .join("")
+      .trim();
     language = CodeBlockLanguage.FromKeyword(language_str);
   }
 

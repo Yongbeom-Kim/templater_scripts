@@ -27,7 +27,6 @@ expected:
 {{c1::some_code}}
 </code>
 </pre>
-
 ---
 name: C (c) /* comment */
 flags: {}
@@ -89,7 +88,6 @@ expected:
 {{c1::some_code}}
 </code>
 </pre>
-
 ---
 name: C++ (c++) /* comment */
 flags: {}
@@ -151,7 +149,6 @@ expected:
 {{c1::some_code}}
 </code>
 </pre>
-
 ---
 name: Groovy (groovy) /* comment */
 flags: {}

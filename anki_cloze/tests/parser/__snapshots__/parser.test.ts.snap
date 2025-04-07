@@ -576,7 +576,7 @@ int main() {
         "type": "code_line",
       },
     ],
-    "language": "c++",
+    "language": "cpp",
     "language_str": "cpp",
     "type": "code_block",
   },
