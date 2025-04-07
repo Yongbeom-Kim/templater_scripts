@@ -3,7 +3,7 @@ import { Token, TokenType } from "../tokenizer/token_types";
 export class ParserState {
   constructor(
     public readonly tokens: Token[],
-    public readonly next: number = 0,
+    public readonly next: number = 0
   ) {}
 
   good(): boolean {
@@ -29,7 +29,7 @@ export class ParserState {
     return [
       new ParserState(
         this.tokens,
-        Math.min(this.next + n_tokens, this.tokens.length),
+        Math.min(this.next + n_tokens, this.tokens.length)
       ),
       result,
     ];
@@ -37,7 +37,7 @@ export class ParserState {
 
   consumeUntilType(
     type: TokenType,
-    include: boolean = false,
+    include: boolean = false
   ): [ParserState, Token[]] {
     const result: Token[] = [];
     let i = this.next;
@@ -56,6 +56,22 @@ export class ParserState {
     let i = this.next;
     for (; i < this.tokens.length && this.tokens[i].type === type; i++) {
       result.push(this.tokens[i]);
+    }
+    return [new ParserState(this.tokens, i), result];
+  }
+
+  consumeUntilLexeme(
+    lexeme: string,
+    include: boolean = false
+  ): [ParserState, Token[]] {
+    const result: Token[] = [];
+    let i = this.next;
+    for (; i < this.tokens.length && this.tokens[i].lexeme !== lexeme; i++) {
+      result.push(this.tokens[i]);
+    }
+    if (include && i < this.tokens.length) {
+      result.push(this.tokens[i]);
+      i++;
     }
     return [new ParserState(this.tokens, i), result];
   }
@@ -88,6 +104,9 @@ export enum ParseTreeNodeType {
   Indent = "indent",
   Text = "text",
   List = "list",
+  CodeBlock = "code_block",
+  CodeLine = "code_line",
+  CodeComment = "code_comment",
 }
 
 export abstract class ParseTreeVisitor {
@@ -167,7 +186,7 @@ export class TextLineNode extends ParseTreeNode {
   constructor(
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
-    public readonly endingNewline?: Token, // undefined if EOF
+    public readonly endingNewline?: Token // undefined if EOF
   ) {
     super();
   }
@@ -193,7 +212,7 @@ export class ListNode extends TextLineNode {
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline?: Token, // undefined if EOF
-    public readonly children: ParseTreeNode[] = [],
+    public readonly children: ParseTreeNode[] = []
   ) {
     super(indent, contents, endingNewline); // This should combine indent + marker + contents, but it's okay since we don't rely on the inheritance.
   }
@@ -214,7 +233,96 @@ export class ListNode extends TextLineNode {
       this.marker,
       this.contents,
       this.endingNewline,
-      this.children,
+      this.children
     );
   }
+}
+
+export enum CodeBlockLanguage {
+  None = "",
+  Python = "python",
+  Cpp = "c++",
+}
+
+export namespace CodeBlockLanguage {
+  export const FromToken = (token?: Token): CodeBlockLanguage => {
+    if (!token) {
+      console.warn(
+        "No token provided when parsing code block language. Expected a newline token or a language name."
+      );
+      return CodeBlockLanguage.None;
+    }
+    if (token.type === TokenType.Newline) {
+      return CodeBlockLanguage.None;
+    }
+    if (token.type === TokenType.Text) {
+      switch (token.lexeme) {
+        case "py":
+        case "python":
+          return CodeBlockLanguage.Python;
+        case "cpp":
+        case "c++":
+          return CodeBlockLanguage.Cpp;
+        default:
+          return CodeBlockLanguage.None;
+      }
+    }
+    console.warn(
+      `Unrecognized token type when parsing code block language: ${token.type}, lexeme: ${token.lexeme}`
+    );
+    return CodeBlockLanguage.None;
+  };
+}
+
+export class CodeBlockNode extends ParseTreeNode {
+  type = ParseTreeNodeType.CodeBlock;
+  constructor(
+    public readonly language_str: string,
+    public readonly language: CodeBlockLanguage,
+    public readonly contents: ParseTreeNode[]
+  ) {
+    super();
+    for (const content of contents) {
+      if (
+        content.type !== ParseTreeNodeType.CodeLine &&
+        content.type !== ParseTreeNodeType.CodeComment
+      ) {
+        throw new Error(
+          "Code block contents must be code line or code comment nodes"
+        );
+      }
+    }
+  }
+
+  toText(): string {
+    return `\`\`\`${this.language_str}\n${this.contents.map((t) => t.toText()).join("")}\`\`\``;
+  }
+  clone(): ParseTreeNode {
+    return new CodeBlockNode(this.language_str, this.language, this.contents.map((t) => t.clone()));
+  }
+}
+
+export class CodeLineNode extends ParseTreeNode {
+  type = ParseTreeNodeType.CodeLine;
+  constructor(
+    public readonly indent: IndentNode,
+    public readonly contents: ParseTreeNode[],
+    public readonly endingNewline?: Token // undefined if EOF
+  ) {
+    super();
+  }
+  toText(): string {
+    return this.indent.toText() + this.contents.map((t) => t.toText()).join("") + (this.endingNewline?.lexeme ?? "");
+  }
+  clone(): ParseTreeNode {
+    return new CodeLineNode(this.indent, this.contents, this.endingNewline);
+  }
+
+  empty(): boolean { // TODO: Do better
+    return this.toText().trim().length === 0;
+  }
+}
+
+export class CodeCommentNode extends CodeLineNode {
+  type = ParseTreeNodeType.CodeComment;
 }

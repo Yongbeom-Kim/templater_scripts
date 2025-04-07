@@ -20,7 +20,7 @@ export const tokenize = (text: string): Token[] => {
       [updatedState, lexeme] = state.consumeUntil(not(isSpace));
       tokens.push(Token.Create(state, TokenType.Whitespace, lexeme));
     } else if (isNewline(state.peek(1))) {
-      [updatedState, lexeme] = state.consumeUntil(not(isNewline));
+      [updatedState, lexeme] = state.consume(1);
       tokens.push(Token.Create(state, TokenType.Newline, lexeme));
     } else if (isPunctuation(state.peek(1))) {
       [updatedState, lexeme] = state.consumeUntil(not(isPunctuation));
