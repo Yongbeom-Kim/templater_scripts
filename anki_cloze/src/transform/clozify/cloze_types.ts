@@ -167,45 +167,51 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitCodeBlockNode(node: CodeBlockNode): void {
     this._visitStack.push(node);
     let convertCloze = false;
-    const children = [];
+    const children: ClozeCodeLineNode[] = [];
+    const spacesPerTab = determineSpacesPerTab(node.contents);
+
+    const addChild = (child: CodeLineNode) => {
+      children.push(
+        new ClozeCodeLineNode(
+          child.type === ParseTreeNodeType.CodeComment ? false : convertCloze,
+          this._cloze_number,
+          spacesPerTab,
+          child.indent,
+          child.contents,
+          child.endingNewline,
+        ),
+      );
+    };
     for (let i = 0; i < node.contents.length; i++) {
       const child = node.contents[i];
       if (child.type === ParseTreeNodeType.CodeComment) {
-        while (
-          i + 1 < node.contents.length &&
-          node.contents[i + 1].type === ParseTreeNodeType.CodeComment
-        ) {
-          children.push(node.contents[i]);
-          i++;
-        }
+        if (convertCloze) this._cloze_number++;
         convertCloze = true;
-      } else if (child.type === ParseTreeNodeType.CodeLine) {
-        if (!(child instanceof CodeLineNode))
-          throw new Error(`Expected CodeLineNode. ${this.debug()}`);
+        addChild(child);
+        while (node.contents[i + 1]?.type === ParseTreeNodeType.CodeComment) {
+          i++;
+          addChild(node.contents[i]);
+        }
+      }
 
+      if (child.type === ParseTreeNodeType.CodeLine) {
         if (child.empty() && convertCloze) {
           convertCloze = false;
           this._cloze_number++;
         }
-
-        if (!child.empty() && convertCloze) {
-          children.push(
-            ClozeCodeLineNode.FromCodeLineNode(child, this._cloze_number),
-          );
-          continue;
-        }
+        addChild(child);
       }
-      children.push(child);
     }
     if (children.length !== node.contents.length) {
       throw new Error(
-        `Expected the same number of children as the original node. ${this.debug()}`,
+        `Expected the same number of children as the original node. Original node has ${node.contents.length} children, but transformed node has ${children.length} children. ${this.debug()}`,
       );
     }
     const transformed_node = new ClozeCodeBlockNode(
       node.language_str,
       node.language,
       children,
+      spacesPerTab,
     );
     this._transformedNodes.push(transformed_node);
     this._visitStack.pop();
@@ -234,20 +240,24 @@ export class ClozeCodeBlockNode extends CodeBlockNode {
   constructor(
     public readonly language_str: string,
     public readonly language: CodeBlockLanguage,
-    public readonly contents: ParseTreeNode[],
+    public readonly contents: ClozeCodeLineNode[],
+    public readonly spacesPerTab: 2 | 4,
   ) {
     super(language_str, language, contents);
   }
 
   toText(): string {
-    return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${this.language}">\n${this.contents.map((t) => t.toText()).join("")}</code>\n</pre>`;
+    return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${
+      this.language
+    }">\n${this.contents.map((t) => t.toText()).join("")}</code>\n</pre>`;
   }
 
   clone(): ClozeCodeBlockNode {
     return new ClozeCodeBlockNode(
       this.language_str,
       this.language,
-      this.contents.map((t) => t.clone()),
+      this.contents.map((t: ClozeCodeLineNode) => t.clone()),
+      this.spacesPerTab,
     );
   }
 }
@@ -290,7 +300,9 @@ export class ClozeTextNode extends TextNode {
 export class ClozeCodeLineNode extends CodeLineNode {
   type = ParseTreeNodeType.CodeLine;
   constructor(
+    public readonly cloze_deletion: boolean,
     public readonly cloze_number: number,
+    public readonly spacesPerTab: 2 | 4,
     public readonly indent: IndentNode,
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline?: Token, // undefined if EOF
@@ -298,20 +310,46 @@ export class ClozeCodeLineNode extends CodeLineNode {
     super(indent, contents, endingNewline);
   }
   toText(): string {
-    return `{{c${this.cloze_number}::${
-      this.indent.toText() + this.contents.map((t) => t.toText()).join("")
-    }}}${this.endingNewline?.lexeme ?? ""}`;
+    const indent = normalizeIndent(this.indent.toText(), this.spacesPerTab);
+    let content = this.contents.map((t) => t.toText()).join("");
+    if (this.cloze_deletion) {
+      content = `{{c${this.cloze_number}::${content}}}`;
+    }
+    return `${indent}${content}${this.endingNewline?.lexeme ?? ""}`;
   }
 
-  static FromCodeLineNode(
-    node: CodeLineNode,
-    cloze_number: number,
-  ): ClozeCodeLineNode {
+  clone(): ClozeCodeLineNode {
     return new ClozeCodeLineNode(
-      cloze_number,
-      node.indent,
-      node.contents,
-      node.endingNewline,
+      this.cloze_deletion,
+      this.cloze_number,
+      this.spacesPerTab,
+      this.indent,
+      this.contents,
+      this.endingNewline,
     );
   }
 }
+
+const normalizeIndent = (indent: string, spacesPerTab: 2 | 4): string => {
+  if ([...indent].filter((c) => c !== " " && c !== "\t").length > 0) {
+    throw new Error(
+      `Indent can only contain spaces or tabs. Indent gotten: ${indent}`,
+    );
+  }
+  let n_spaces = [...indent].filter((c) => c === " ").length;
+  const n_tabs = indent.length - n_spaces;
+  if (spacesPerTab == 2) {
+    n_spaces = Math.ceil(n_spaces / 2) * 2;
+  } else {
+    n_spaces = Math.round(n_spaces / 4) * 4;
+  }
+  return "\t".repeat(n_spaces / spacesPerTab + n_tabs);
+};
+
+const determineSpacesPerTab = (lines: CodeLineNode[]): 2 | 4 => {
+  const spaces = lines.map((l) => l.indent.n_spaces);
+  if (!spaces.some((s) => s % 4 !== 0)) {
+    return 4;
+  }
+  return 2;
+};

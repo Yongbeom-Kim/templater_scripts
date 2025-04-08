@@ -1,0 +1,100 @@
+name: Indents: Tabs -> Tabs
+flags: {}
+input:
+```python
+def test_parser():
+	# comment
+	for i in range(2):
+		if i % 2 == 0:
+			# comment
+			while i < 1:
+				print("Level 4")
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+def test_parser():
+	# comment
+	{{c1::for i in range(2):}}
+		{{c1::if i % 2 == 0:}}
+			# comment
+			{{c2::while i < 1:}}
+				{{c2::print("Level 4")}}
+</code>
+</pre>
+---
+name: Indents: 2 space -> Tabs
+flags: {}
+input:
+```python
+def test_parser():
+  # comment
+  for i in range(2):
+    if i % 2 == 0:
+      # comment
+      while i < 1:
+        print("Level 4")
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+def test_parser():
+	# comment
+	{{c1::for i in range(2):}}
+		{{c1::if i % 2 == 0:}}
+			# comment
+			{{c2::while i < 1:}}
+				{{c2::print("Level 4")}}
+</code>
+</pre>
+---
+name: Indents: 4 space -> Tabs
+flags: {}
+input:
+```python
+def test_parser():
+    # comment
+    for i in range(2):
+        if i % 2 == 0:
+            # comment
+            while i < 1:
+                print("Level 4")
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+def test_parser():
+	# comment
+	{{c1::for i in range(2):}}
+		{{c1::if i % 2 == 0:}}
+			# comment
+			{{c2::while i < 1:}}
+				{{c2::print("Level 4")}}
+</code>
+</pre>
+---
+name: Indents: 2 space -> Tabs, but odd spaces are rounded up
+flags: {}
+input:
+```python
+def test_parser():
+ # comment
+ for i in range(2):
+   if i % 2 == 0:
+     # comment
+     while i < 1:
+       print("Level 4")
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+def test_parser():
+	# comment
+	{{c1::for i in range(2):}}
+		{{c1::if i % 2 == 0:}}
+			# comment
+			{{c2::while i < 1:}}
+				{{c2::print("Level 4")}}
+</code>
+</pre>
+---

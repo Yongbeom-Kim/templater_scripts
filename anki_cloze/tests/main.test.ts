@@ -12,6 +12,16 @@ describe("test spec", () => {
         expect(output).toBe(expected);
       });
     });
+
+    describe("indents.spec.txt", () => {
+      const testCases = parseSpecFile(
+        "tests/data/code_blocks/indents.spec.txt",
+      );
+      it.each(testCases)("$name", ({ input, expected, flags }) => {
+        const output = clozify(input, flags);
+        expect(output).toBe(expected);
+      });
+    });
   });
 
   describe("text", () => {

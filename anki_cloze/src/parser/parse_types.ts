@@ -128,11 +128,15 @@ export abstract class ParseTreeNode {
 
 export class IndentNode extends ParseTreeNode {
   type = ParseTreeNodeType.Indent;
+  n_spaces: number;
+  n_tabs: number;
   private constructor(public readonly indent?: Token) {
     super();
     if (indent && indent.type !== TokenType.Whitespace) {
       throw new Error("Indent must be a whitespace token");
     }
+    this.n_spaces = [...(indent?.lexeme ?? "")].filter((c) => c === " ").length;
+    this.n_tabs = [...(indent?.lexeme ?? "")].filter((c) => c === "\t").length;
   }
   toText(): string {
     return this.indent?.lexeme ?? "";
@@ -316,7 +320,7 @@ export class CodeBlockNode extends ParseTreeNode {
   constructor(
     public readonly language_str: string,
     public readonly language: CodeBlockLanguage,
-    public readonly contents: ParseTreeNode[],
+    public readonly contents: CodeLineNode[],
   ) {
     super();
     for (const content of contents) {
@@ -336,11 +340,11 @@ export class CodeBlockNode extends ParseTreeNode {
       .map((t) => t.toText())
       .join("")}\`\`\``;
   }
-  clone(): ParseTreeNode {
+  clone(): CodeBlockNode {
     return new CodeBlockNode(
       this.language_str,
       this.language,
-      this.contents.map((t) => t.clone()),
+      this.contents.map((t: CodeLineNode) => t.clone()),
     );
   }
 }
@@ -361,7 +365,7 @@ export class CodeLineNode extends ParseTreeNode {
       (this.endingNewline?.lexeme ?? "")
     );
   }
-  clone(): ParseTreeNode {
+  clone(): CodeLineNode {
     return new CodeLineNode(this.indent, this.contents, this.endingNewline);
   }
 
