@@ -1,0 +1,30 @@
+name: Code block cloze deletion keeps index
+flags: {"list": {"enable_hints": true}}
+input:
+- front - back
+- front = back
+```python
+# front
+back
+# front
+back
+# front
+back
+```
+- front - back
+- front = back
+expected:
+- {{c1::::front}} - {{c1::back}}
+- {{c2::::front}} = {{c2::back}}
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# front
+{{c3::back}}
+# front
+{{c4::back}}
+# front
+{{c5::back}}
+</code>
+</pre>
+- {{c6::::front}} - {{c6::back}}
+- {{c7::::front}} = {{c7::back}}

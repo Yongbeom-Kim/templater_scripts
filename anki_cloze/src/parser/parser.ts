@@ -97,7 +97,12 @@ const tryParseCodeBlock = (
   ) {
     return [backupState, null];
   }
-  return [state, new CodeBlockNode(language_str, language, children)];
+  const endingNewline =
+    peeked.length > 1 ? peeked[peeked.length - 1] : undefined;
+  return [
+    state,
+    new CodeBlockNode(language_str, language, children, endingNewline),
+  ];
 };
 
 const parseCodeLine = (

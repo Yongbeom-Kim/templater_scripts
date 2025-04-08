@@ -268,6 +268,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
         addChild(child);
       }
     }
+    if (convertCloze) this._cloze_number++;
     if (children.length !== node.contents.length) {
       throw new Error(
         `Expected the same number of children as the original node. Original node has ${node.contents.length} children, but transformed node has ${children.length} children. ${this.debug()}`,
@@ -278,6 +279,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       node.language,
       children,
       spacesPerTab,
+      node.endingNewline,
     );
     this._transformedNodes.push(transformed_node);
     this._visitStack.pop();

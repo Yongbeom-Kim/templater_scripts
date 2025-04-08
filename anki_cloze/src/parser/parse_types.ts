@@ -296,6 +296,7 @@ export class CodeBlockNode extends ParseTreeNode {
     public readonly language_str: string,
     public readonly language: CodeBlockLanguage,
     public readonly contents: CodeLineNode[],
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super();
     for (const content of contents) {
@@ -313,7 +314,7 @@ export class CodeBlockNode extends ParseTreeNode {
   toText(): string {
     return `\`\`\`${this.language_str}\n${this.contents
       .map((t) => t.toText())
-      .join("")}\`\`\``;
+      .join("")}\`\`\`${this.endingNewline?.lexeme ?? ""}`;
   }
 }
 

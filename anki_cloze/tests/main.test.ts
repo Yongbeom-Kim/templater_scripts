@@ -8,6 +8,7 @@ describe("test spec", () => {
     "code_blocks/indents.spec.txt",
     "code_blocks/curly_braces.spec.txt",
     "text/curly_braces.spec.txt",
+    "code_blocks/cloze_index.spec.txt",
   ])("%s", (name) => {
     const testCases = parseSpecFile(`tests/data/${name}`);
     it.each(testCases)("$name", ({ input, expected, flags }) => {

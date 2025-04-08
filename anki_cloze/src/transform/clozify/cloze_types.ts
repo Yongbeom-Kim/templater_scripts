@@ -200,20 +200,21 @@ export class ClozeCodeBlockNode extends ClozeParseTreeNode {
     public readonly language: CodeBlockLanguage,
     public readonly contents: ClozeCodeLineNode[],
     public readonly spacesPerTab: 2 | 4,
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super({ is_deletion: false, is_hint: false, cloze_index: -1 });
   }
   toText(): string {
     return `\`\`\`${this.language_str}\n${this.contents
       .map((t) => t.toText())
-      .join("")}\`\`\``;
+      .join("")}\`\`\`${this.endingNewline?.lexeme ?? ""}`;
   }
   toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
     return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${
       this.language
     }">\n${this.contents
       .map((t) => t.toClozeText(options, disable_cloze))
-      .join("")}</code>\n</pre>`;
+      .join("")}</code>\n</pre>${this.endingNewline?.lexeme ?? ""}`;
   }
 }
 
