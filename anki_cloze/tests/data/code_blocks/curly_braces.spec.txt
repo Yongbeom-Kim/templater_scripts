@@ -1,5 +1,5 @@
 name: Curly braces: Handle by inserting spaces
-flags: {"code": {"handle_curly": "insert_space"}}
+flags: {"handle_curly": "insert_space"}
 input:
 ```python
 # comment
@@ -22,7 +22,7 @@ expected:
 </pre>
 ---
 name: Curly braces: Handle with ZWJ
-flags: {"code": {"handle_curly": "zwj"}}
+flags: {"handle_curly": "zwj"}
 input:
 ```python
 # comment
@@ -45,7 +45,7 @@ expected:
 </pre>
 ---
 name: Curly braces: Handle with Fullwidth
-flags: {"code": {"handle_curly": "fullwidth"}}
+flags: {"handle_curly": "fullwidth"}
 input:
 ```python
 # comment

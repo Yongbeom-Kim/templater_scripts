@@ -5,11 +5,10 @@ import { ParseTreeNode } from "./parser/parse_types";
 import { ClozeTransformOptions } from "./transform/clozify/cloze_types";
 import { mergeObject } from "./utils/merge_object";
 
-
 const default_options: ClozeTransformOptions = {
-  front: false,
-  code: {
-    handle_curly: "fullwidth",
+  handle_curly: "fullwidth",
+  list: {
+    enable_hints: false,
   },
 };
 

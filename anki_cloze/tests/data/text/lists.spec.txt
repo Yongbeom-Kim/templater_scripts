@@ -1,5 +1,5 @@
-name: Basic lists (2-space indent), front=true
-flags: {"front": true}
+name: Basic lists (2-space indent), list.enable_hints=true
+flags: {"list": {"enable_hints": true}}
 input:
 Some Text
 - List
@@ -19,8 +19,8 @@ Some Text
 2. {{c3::::Front}} - {{c3::back}}
 <TAB>3. {{c4::::Front}} - {{c4::back}}
 ---
-name: Basic lists (2-space indent), front=false
-flags: {"front": false}
+name: Basic lists (2-space indent), list.enable_hints=false
+flags: {"list": {"enable_hints": false}}
 input:
 Some Text
 - List

@@ -19,9 +19,9 @@ const ZWJ = "\u200D";
 const FullRightCurlyBrace = "｝";
 
 export type ClozeTransformOptions = {
-  front: boolean;
-  code: {
-    handle_curly: "fullwidth" | "zwj" | "insert_space";
+  handle_curly: "fullwidth" | "zwj" | "insert_space";
+  list: {
+    enable_hints: boolean;
   };
 };
 
@@ -31,9 +31,28 @@ export type ClozeDeletionType = {
   cloze_index: number;
 };
 
-const cloze_delete = (str: string, type: ClozeDeletionType) => {
+const cloze_delete = (
+  str: string,
+  type: ClozeDeletionType,
+  options: ClozeTransformOptions,
+) => {
   if (!type.is_deletion && !type.is_hint) {
     return str;
+  }
+  if (options.handle_curly === "zwj") {
+    str = str
+      .replaceAll("}}", "}" + ZWJ + "}")
+      .replaceAll("}}", "}" + ZWJ + "}") // 2x replaceAll inserts delimiter between all pairs
+      .replace(/}$/, "}" + ZWJ);
+  } else if (options.handle_curly === "fullwidth") {
+    str = str
+      .replaceAll("}", FullRightCurlyBrace)
+      .replace(/}$/, FullRightCurlyBrace);
+  } else if (options.handle_curly === "insert_space") {
+    str = str
+      .replaceAll("}}", "} }")
+      .replaceAll("}}", "} }") // 2x replaceAll inserts delimiter between all pairs
+      .replace(/}$/, "} ");
   }
   if (type.is_deletion) {
     return `{{c${type.cloze_index}::${str}}}`;
@@ -54,7 +73,7 @@ export abstract class ClozeParseTreeNode
   constructor(public readonly cloze_type: ClozeDeletionType) {
     if (cloze_type.is_deletion && cloze_type.is_hint) {
       throw new Error(
-        "A node cannot be both a cloze deletion and a cloze hint."
+        "A node cannot be both a cloze deletion and a cloze hint.",
       );
     }
     super();
@@ -66,7 +85,7 @@ export abstract class ClozeParseTreeNode
 
   abstract toClozeText(
     options: ClozeTransformOptions,
-    disable_cloze: boolean
+    disable_cloze: boolean,
   ): string;
 }
 
@@ -76,16 +95,14 @@ export class ClozeIndentNode extends ClozeParseTreeNode {
   constructor(
     public readonly n_spaces: number,
     public readonly n_tabs: number,
-    public readonly spaces_per_tab: 2 | 4
+    public readonly spaces_per_tab: 2 | 4,
   ) {
     super({ is_deletion: false, is_hint: false, cloze_index: -1 }); // Indent cannot be a cloze deletion.
   }
   toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
     const final_tabs =
       Math.round(this.n_spaces / this.spaces_per_tab) + this.n_tabs;
-    return (
-      "\t".repeat(final_tabs)
-    );
+    return "\t".repeat(final_tabs);
   }
   toText(): string {
     return "\t".repeat(this.n_tabs) + " ".repeat(this.n_spaces);
@@ -99,7 +116,7 @@ export class ClozeTextNode extends ClozeParseTreeNode {
   type: ParseTreeNodeType = ParseTreeNodeType.Text;
   constructor(
     public readonly cloze_type: ClozeDeletionType,
-    public readonly contents: Token[]
+    public readonly contents: Token[],
   ) {
     super(cloze_type);
   }
@@ -107,7 +124,7 @@ export class ClozeTextNode extends ClozeParseTreeNode {
     if (disable_cloze) {
       return this.toText();
     }
-    return cloze_delete(this.toText(), this.cloze_type);
+    return cloze_delete(this.toText(), this.cloze_type, options);
   }
   toText(): string {
     return this.contents.map((t) => t.lexeme).join("");
@@ -121,7 +138,7 @@ export class ClozeTextLineNode extends ClozeParseTreeNode {
     public readonly cloze_type: ClozeDeletionType,
     public readonly indent: ClozeIndentNode,
     public readonly contents: ClozeParseTreeNode[],
-    public readonly endingNewline?: Token // undefined if EOF
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super(cloze_type);
   }
@@ -150,7 +167,7 @@ export class ClozeListNode extends ClozeParseTreeNode {
     public readonly indent: ClozeIndentNode,
     public readonly marker: Token[],
     public readonly contents: ClozeParseTreeNode[],
-    public readonly endingNewline?: Token // undefined if EOF
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     super({ is_deletion: false, is_hint: false, cloze_index: -1 });
   }
@@ -182,7 +199,7 @@ export class ClozeCodeBlockNode extends ClozeParseTreeNode {
     public readonly language_str: string,
     public readonly language: CodeBlockLanguage,
     public readonly contents: ClozeCodeLineNode[],
-    public readonly spacesPerTab: 2 | 4
+    public readonly spacesPerTab: 2 | 4,
   ) {
     super({ is_deletion: false, is_hint: false, cloze_index: -1 });
   }
@@ -206,7 +223,7 @@ export class ClozeCodeLineNode extends ClozeParseTreeNode {
     public readonly cloze_type: ClozeDeletionType,
     public readonly indent: ClozeIndentNode,
     public readonly contents: ClozeParseTreeNode[],
-    public readonly endingNewline?: Token // undefined if EOF
+    public readonly endingNewline?: Token, // undefined if EOF
   ) {
     if (cloze_type.is_hint) {
       throw new Error("Cloze hint on code line is not supported.");
@@ -219,23 +236,8 @@ export class ClozeCodeLineNode extends ClozeParseTreeNode {
     let content = this.contents
       .map((t) => t.toClozeText(options, true))
       .join("");
-    if (options.code.handle_curly === "zwj") {
-      content = content
-        .replaceAll("}}", "}" + ZWJ + "}")
-        .replaceAll("}}", "}" + ZWJ + "}") // 2x replaceAll inserts delimiter between all pairs
-        .replace(/}$/, "}" + ZWJ);
-    } else if (options.code.handle_curly === "fullwidth") {
-      content = content
-        .replaceAll("}", FullRightCurlyBrace)
-        .replace(/}$/, FullRightCurlyBrace);
-    } else if (options.code.handle_curly === "insert_space") {
-      content = content
-        .replaceAll("}}", "} }")
-        .replaceAll("}}", "} }") // 2x replaceAll inserts delimiter between all pairs
-        .replace(/}$/, "} ");
-    }
     if (this.cloze_type.is_deletion) {
-      content = `{{c${this.cloze_type.cloze_index}::${content}}}`;
+      content = cloze_delete(content, this.cloze_type, options);
     }
     return `${indent}${content}${this.endingNewline?.lexeme ?? ""}`;
   }
@@ -250,7 +252,7 @@ export class ClozeCodeCommentNode extends ClozeCodeLineNode {
   toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
     if (disable_cloze) {
       console.warn(
-        "Cloze deletions on code comments are not supported. This will be ignored."
+        "Cloze deletions on code comments are not supported. This will be ignored.",
       );
     }
     return super.toClozeText(options, disable_cloze);

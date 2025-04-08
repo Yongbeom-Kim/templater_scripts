@@ -1,0 +1,27 @@
+name: List (Curly braces): Handle by inserting spaces
+flags: {"list": {"enable_hints": true}, "handle_curly": "insert_space"}
+input:
+- {{List}}
+- {{{front}}} - } }} }}}
+expected:
+- {{List}}
+- {{c1::::{{{front} } } }} - {{c1::} } } } } } }}
+---
+name: List (Curly braces): Handle with ZWJ
+flags: {"list": {"enable_hints": true}, "handle_curly": "zwj"}
+input:
+- {{List}}
+- {{{front}}} - } }} }}}
+expected:
+- {{List}}
+- {{c1::::{{{front}<ZWJ>}<ZWJ>}<ZWJ>}} - {{c1::} }<ZWJ>} }<ZWJ>}<ZWJ>}<ZWJ>}}
+---
+name: List (Curly braces): Handle with FullWidth
+flags: {"list": {"enable_hints": true}, "handle_curly": "fullwidth"}
+input:
+- {{List}}
+- {{{front}}} - } }} }}}
+expected:
+- {{List}}
+- {{c1::::{{{front｝｝｝}} - {{c1::｝ ｝｝ ｝｝｝}}
+---

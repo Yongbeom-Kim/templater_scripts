@@ -166,7 +166,6 @@ export class TextNode extends ParseTreeNode {
   static FromTokens(tokens: Token[]): TextNode {
     return new TextNode(tokens);
   }
-
 }
 
 /**

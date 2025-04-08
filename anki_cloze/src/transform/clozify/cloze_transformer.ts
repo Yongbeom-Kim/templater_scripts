@@ -1,6 +1,25 @@
-import { CodeBlockNode, CodeLineNode, IndentNode, ListNode, ParseTreeNode, ParseTreeNodeType, ParseTreeVisitor, TextLineNode, TextNode } from "../../parser/parse_types";
+import {
+  CodeBlockNode,
+  CodeLineNode,
+  IndentNode,
+  ListNode,
+  ParseTreeNode,
+  ParseTreeNodeType,
+  ParseTreeVisitor,
+  TextLineNode,
+  TextNode,
+} from "../../parser/parse_types";
 import { mergeObject } from "../../utils/merge_object";
-import { ClozeCodeBlockNode, ClozeCodeLineNode, ClozeIndentNode, ClozeListNode, ClozeParseTreeNode, ClozeTextLineNode, ClozeTextNode, ClozeTransformOptions } from "./cloze_types";
+import {
+  ClozeCodeBlockNode,
+  ClozeCodeLineNode,
+  ClozeIndentNode,
+  ClozeListNode,
+  ClozeParseTreeNode,
+  ClozeTextLineNode,
+  ClozeTextNode,
+  ClozeTransformOptions,
+} from "./cloze_types";
 
 export const clozify = (
   tree: ParseTreeNode[],
@@ -54,11 +73,16 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       );
     }
     this._visitStack.push(node);
-    this._transformedNodes.push(new ClozeTextNode({
-      is_deletion: false,
-      is_hint: false,
-      cloze_index: this._cloze_number,
-    }, node.contents));
+    this._transformedNodes.push(
+      new ClozeTextNode(
+        {
+          is_deletion: false,
+          is_hint: false,
+          cloze_index: this._cloze_number,
+        },
+        node.contents,
+      ),
+    );
     this._visitStack.pop();
   }
 
@@ -74,7 +98,9 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       );
     }
     this._visitStack.push(node);
-    this._transformedNodes.push(new ClozeIndentNode(node.n_spaces, node.n_tabs, this._spacesPerTab));
+    this._transformedNodes.push(
+      new ClozeIndentNode(node.n_spaces, node.n_tabs, this._spacesPerTab),
+    );
     this._spacesPerTab = undefined;
     this._visitStack.pop();
   }
@@ -89,11 +115,18 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       this.visit(c);
       return this._transformedNodes.pop()!;
     });
-    this._transformedNodes.push(new ClozeTextLineNode({
-      is_deletion: false,
-      is_hint: false,
-      cloze_index: this._cloze_number,
-    }, indent, contents, node.endingNewline));
+    this._transformedNodes.push(
+      new ClozeTextLineNode(
+        {
+          is_deletion: false,
+          is_hint: false,
+          cloze_index: this._cloze_number,
+        },
+        indent,
+        contents,
+        node.endingNewline,
+      ),
+    );
     this._visitStack.pop();
   }
 
@@ -135,21 +168,30 @@ export class ClozifyVisitor extends ParseTreeVisitor {
         const front = tokens.slice(0, i);
         const back = tokens.slice(i + 3);
         transformed_contents = [
-          new ClozeTextNode({
-            is_deletion: false,
-            is_hint: this._options.front,
-            cloze_index: this._cloze_number,
-          }, front),
-          new ClozeTextNode({
-            is_deletion: false,
-            is_hint: false,
-            cloze_index: this._cloze_number,
-          }, tokens.slice(i, i + 3)),
-          new ClozeTextNode({
-            is_deletion: true,
-            is_hint: false,
-            cloze_index: this._cloze_number,
-          }, back),
+          new ClozeTextNode(
+            {
+              is_deletion: false,
+              is_hint: this._options.list.enable_hints,
+              cloze_index: this._cloze_number,
+            },
+            front,
+          ),
+          new ClozeTextNode(
+            {
+              is_deletion: false,
+              is_hint: false,
+              cloze_index: this._cloze_number,
+            },
+            tokens.slice(i, i + 3),
+          ),
+          new ClozeTextNode(
+            {
+              is_deletion: true,
+              is_hint: false,
+              cloze_index: this._cloze_number,
+            },
+            back,
+          ),
         ];
         this._cloze_number++;
         break;
@@ -192,7 +234,10 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       children.push(
         new ClozeCodeLineNode(
           {
-            is_deletion: child.type === ParseTreeNodeType.CodeComment ? false : convertCloze,
+            is_deletion:
+              child.type === ParseTreeNodeType.CodeComment
+                ? false
+                : convertCloze,
             is_hint: false,
             cloze_index: this._cloze_number,
           },
