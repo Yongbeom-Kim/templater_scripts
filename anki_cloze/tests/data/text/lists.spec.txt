@@ -1,0 +1,42 @@
+name: Basic lists (2-space indent), front=true
+flags: {"front": true}
+input:
+Some Text
+- List
+  - List
+- Front - back
+  - Front - back
+1. List
+2. Front - back
+  3. Front - back
+expected:
+Some Text
+- List
+  - List
+- {{c1::::Front}} - {{c1::back}}
+  - {{c2::::Front}} - {{c2::back}}
+1. List
+2. {{c3::::Front}} - {{c3::back}}
+  3. {{c4::::Front}} - {{c4::back}}
+---
+name: Basic lists (2-space indent), front=false
+flags: {"front": false}
+input:
+Some Text
+- List
+  - List
+- Front - back
+  - Front - back
+1. List
+2. Front - back
+  3. Front - back
+expected:
+Some Text
+- List
+  - List
+- Front - {{c1::back}}
+  - Front - {{c2::back}}
+1. List
+2. Front - {{c3::back}}
+  3. Front - {{c4::back}}
+---

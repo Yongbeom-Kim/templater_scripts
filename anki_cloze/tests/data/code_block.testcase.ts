@@ -88,13 +88,6 @@ ${TRIPLE_QUOTE}
     `.trim(),
     tokenize_expect: () => {},
     parse_expect: (result: ParseTreeNode[]) => {
-      console.log(
-        JSON.stringify(
-          (result[0] as CodeBlockNode).contents.map((t) => t.toText()),
-          null,
-          2,
-        ),
-      );
       expect(result.length).toBe(1);
       expect(result[0].type).toBe(ParseTreeNodeType.CodeBlock);
       expect((result[0] as CodeBlockNode).language).toBe(CodeBlockLanguage.Cpp);

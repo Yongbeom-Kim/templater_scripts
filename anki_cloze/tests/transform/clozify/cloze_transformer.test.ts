@@ -20,18 +20,18 @@ describe("test text.testcase.ts", () => {
   );
 });
 
-describe("test list.testcase.ts", () => {
-  it.each(ListTestCases)(
-    'should tokenize "%p" correctly',
-    ({ input, clozify_expect }) => {
-      const tokens = tokenize(input);
-      const parse_tree = parse(tokens);
-      const result = clozify(parse_tree);
-      clozify_expect(result);
-      expect(result).toMatchSnapshot();
-    },
-  );
-});
+// describe("test list.testcase.ts", () => {
+//   it.each(ListTestCases)(
+//     'should tokenize "%p" correctly',
+//     ({ input, clozify_expect }) => {
+//       const tokens = tokenize(input);
+//       const parse_tree = parse(tokens);
+//       const result = clozify(parse_tree);
+//       clozify_expect(result);
+//       expect(result).toMatchSnapshot();
+//     },
+//   );
+// });
 
 describe("test code_block.testcase.ts", () => {
   it.each(CodeBlockTestCases)(

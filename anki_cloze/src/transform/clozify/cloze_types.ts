@@ -14,10 +14,25 @@ import { ParseTreeNode } from "../../parser/parse_types";
 import { ParseTreeVisitor } from "../../parser/parse_types";
 import { Token, TokenType } from "../../tokenizer/token_types";
 
+export type ClozeTransformOptions = {
+  front?: boolean;
+};
+
+const default_options: ClozeTransformOptions = {
+  front: false,
+};
+
 export class ClozifyVisitor extends ParseTreeVisitor {
   private _visitStack: ParseTreeNode[] = [];
   private _transformedNodes: ParseTreeNode[] = [];
   private _cloze_number: number = 1;
+  private _options: ClozeTransformOptions = {};
+
+  constructor(options: ClozeTransformOptions = {}) {
+    super();
+    this._options = { ...default_options, ...options };
+  }
+
   visit(node: ParseTreeNode): void {
     const prevTransformedNodesLength = this._transformedNodes.length;
     if (node instanceof TextNode) {
@@ -110,11 +125,19 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       ) {
         const front = tokens.slice(0, i);
         const back = tokens.slice(i + 3);
-        transformed_contents = [
-          new ClozeTextNode(front, this._cloze_number, true),
-          new TextNode(tokens.slice(i, i + 3)),
-          new ClozeTextNode(back, this._cloze_number, false),
-        ];
+        if (this._options.front) {
+          transformed_contents = [
+            new ClozeTextNode(front, this._cloze_number, true),
+            new TextNode(tokens.slice(i, i + 3)),
+            new ClozeTextNode(back, this._cloze_number, false),
+          ];
+        } else {
+          transformed_contents = [
+            new TextNode(front),
+            new TextNode(tokens.slice(i, i + 3)),
+            new ClozeTextNode(back, this._cloze_number, false),
+          ];
+        }
         this._cloze_number++;
         break;
       }
