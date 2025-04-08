@@ -1,0 +1,68 @@
+name: Curly braces: Handle by inserting spaces
+flags: {"code": {"handle_curly": "insert_space"}}
+input:
+```python
+# comment
+}
+} }
+} }}
+}}}
+}}}}
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::} }}
+{{c1::} } }}
+{{c1::} } } }}
+{{c1::} } } }}
+{{c1::} } } } }}
+</code>
+</pre>
+---
+name: Curly braces: Handle with ZWJ
+flags: {"code": {"handle_curly": "zwj"}}
+input:
+```python
+# comment
+}
+} }
+} }}
+}}}
+}}}}
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::}<ZWJ>}}
+{{c1::} }<ZWJ>}}
+{{c1::} }<ZWJ>}<ZWJ>}}
+{{c1::}<ZWJ>}<ZWJ>}<ZWJ>}}
+{{c1::}<ZWJ>}<ZWJ>}<ZWJ>}<ZWJ>}}
+</code>
+</pre>
+---
+name: Curly braces: Handle with Fullwidth
+flags: {"code": {"handle_curly": "fullwidth"}}
+input:
+```python
+# comment
+}
+} }
+} }}
+}}}
+}}}}
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::｝}}
+{{c1::｝ ｝}}
+{{c1::｝ ｝｝}}
+{{c1::｝｝｝}}
+{{c1::｝｝｝｝}}
+</code>
+</pre>

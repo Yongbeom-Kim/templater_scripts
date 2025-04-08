@@ -1,5 +1,7 @@
 import fs from "fs";
 
+const ZWJ = "\u200D";
+
 interface TestCase {
   name: string;
   flags: object;
@@ -31,6 +33,8 @@ String.prototype.__delimit = function (delimiter: string): string[] {
 function parseSpec(data: string): TestCase[] {
   const testCases: TestCase[] = [];
   const sections = data
+    .replaceAll("<ZWJ>", ZWJ)
+    .replaceAll("<TAB>", "\t")
     .split("---")
     .map((section) => section.trim())
     .filter((section) => section);

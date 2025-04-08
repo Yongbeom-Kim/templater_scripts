@@ -119,7 +119,6 @@ export abstract class ParseTreeNode {
     visitor.visit(this);
   }
   abstract toText(): string;
-  abstract clone(): ParseTreeNode;
 
   static toText(tree: ParseTreeNode[]): string {
     return tree.map((n) => n.toText()).join("");
@@ -140,10 +139,6 @@ export class IndentNode extends ParseTreeNode {
   }
   toText(): string {
     return this.indent?.lexeme ?? "";
-  }
-
-  clone(): IndentNode {
-    return new IndentNode(this.indent);
   }
 
   static FromWhitespace(whitespace: Token): IndentNode {
@@ -172,9 +167,6 @@ export class TextNode extends ParseTreeNode {
     return new TextNode(tokens);
   }
 
-  clone(): TextNode {
-    return new TextNode(this.contents);
-  }
 }
 
 /**
@@ -201,10 +193,6 @@ export class TextLineNode extends ParseTreeNode {
       (this.endingNewline?.lexeme ?? "")
     );
   }
-
-  clone(): TextLineNode {
-    return new TextLineNode(this.indent, this.contents, this.endingNewline);
-  }
 }
 
 export class ListNode extends TextLineNode {
@@ -216,7 +204,6 @@ export class ListNode extends TextLineNode {
     public readonly marker: Token[],
     public readonly contents: ParseTreeNode[],
     public readonly endingNewline?: Token, // undefined if EOF
-    public readonly children: ParseTreeNode[] = [],
   ) {
     super(indent, contents, endingNewline); // This should combine indent + marker + contents, but it's okay since we don't rely on the inheritance.
   }
@@ -227,17 +214,6 @@ export class ListNode extends TextLineNode {
       " " +
       this.contents.map((t) => t.toText()).join("") +
       (this.endingNewline?.lexeme ?? "")
-    );
-  }
-
-  clone(): ListNode {
-    return new ListNode(
-      this.ordered,
-      this.indent,
-      this.marker,
-      this.contents,
-      this.endingNewline,
-      this.children,
     );
   }
 }
@@ -340,13 +316,6 @@ export class CodeBlockNode extends ParseTreeNode {
       .map((t) => t.toText())
       .join("")}\`\`\``;
   }
-  clone(): CodeBlockNode {
-    return new CodeBlockNode(
-      this.language_str,
-      this.language,
-      this.contents.map((t: CodeLineNode) => t.clone()),
-    );
-  }
 }
 
 export class CodeLineNode extends ParseTreeNode {
@@ -365,10 +334,6 @@ export class CodeLineNode extends ParseTreeNode {
       (this.endingNewline?.lexeme ?? "")
     );
   }
-  clone(): CodeLineNode {
-    return new CodeLineNode(this.indent, this.contents, this.endingNewline);
-  }
-
   empty(): boolean {
     // TODO: Do better
     return this.toText().trim().length === 0;

@@ -12,12 +12,12 @@ Some Text
 expected:
 Some Text
 - List
-  - List
+<TAB>- List
 - {{c1::::Front}} - {{c1::back}}
-  - {{c2::::Front}} - {{c2::back}}
+<TAB>- {{c2::::Front}} - {{c2::back}}
 1. List
 2. {{c3::::Front}} - {{c3::back}}
-  3. {{c4::::Front}} - {{c4::back}}
+<TAB>3. {{c4::::Front}} - {{c4::back}}
 ---
 name: Basic lists (2-space indent), front=false
 flags: {"front": false}
@@ -33,10 +33,10 @@ Some Text
 expected:
 Some Text
 - List
-  - List
+<TAB>- List
 - Front - {{c1::back}}
-  - Front - {{c2::back}}
+<TAB>- Front - {{c2::back}}
 1. List
 2. Front - {{c3::back}}
-  3. Front - {{c4::back}}
+<TAB>3. Front - {{c4::back}}
 ---

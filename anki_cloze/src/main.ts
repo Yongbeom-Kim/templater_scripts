@@ -3,12 +3,23 @@ import { tokenize } from "./tokenizer/tokenizer";
 import { clozify as clozifyParseTree } from "./transform/clozify/cloze_transformer";
 import { ParseTreeNode } from "./parser/parse_types";
 import { ClozeTransformOptions } from "./transform/clozify/cloze_types";
+import { mergeObject } from "./utils/merge_object";
+
+
+const default_options: ClozeTransformOptions = {
+  front: false,
+  code: {
+    handle_curly: "fullwidth",
+  },
+};
+
 export function clozify(
   text: string,
-  options: ClozeTransformOptions = {},
+  options: Partial<ClozeTransformOptions> = {},
 ): string {
   const tokens = tokenize(text);
   const parseTree = parse(tokens);
-  const clozes = clozifyParseTree(parseTree, options);
-  return ParseTreeNode.toText(clozes);
+  const completeOptions = mergeObject(default_options, options);
+  const clozes = clozifyParseTree(parseTree, completeOptions);
+  return clozes.map((c) => c.toClozeText(completeOptions, false)).join("");
 }

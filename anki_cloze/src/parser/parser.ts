@@ -179,7 +179,6 @@ const tryParseLine = (
         marker,
         [TextNode.FromTokens(content)],
         endingNewline,
-        [],
       ),
     ];
   }
