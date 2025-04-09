@@ -12,6 +12,7 @@
     "typescript": "^5.8.3"
   },
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "esbuild src/main.ts --bundle --outdir=build --format=cjs"
   }
 }

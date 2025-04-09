@@ -11,8 +11,8 @@ import {
   TableRowNode,
   TextLineNode,
   TextNode,
-} from "../../parser/parse_types";
-import { mergeObject } from "../../utils/merge_object";
+} from "../parser/parse_types";
+import { mergeObject } from "../utils/merge_object";
 import {
   ClozeCodeBlockNode,
   ClozeCodeLineNode,

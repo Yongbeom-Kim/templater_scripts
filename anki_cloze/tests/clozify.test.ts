@@ -1,4 +1,4 @@
-import { clozify } from "../src/main";
+import { clozify } from "../src/clozify";
 import { parseSpecFile } from "./data/testcase_parser";
 
 describe("test spec", () => {

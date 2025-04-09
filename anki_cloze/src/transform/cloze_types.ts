@@ -11,13 +11,13 @@ import {
   TableRowNode,
   TableCellNode,
   TableAlignment,
-} from "../../parser/parse_types";
+} from "../parser/parse_types";
 
-import { ParseTreeNode } from "../../parser/parse_types";
+import { ParseTreeNode } from "../parser/parse_types";
 
-import { ParseTreeVisitor } from "../../parser/parse_types";
-import { Token, TokenType } from "../../tokenizer/token_types";
-import { mergeObject } from "../../utils/merge_object";
+import { ParseTreeVisitor } from "../parser/parse_types";
+import { Token, TokenType } from "../tokenizer/token_types";
+import { mergeObject } from "../utils/merge_object";
 
 const ZWJ = "\u200D";
 const FullRightCurlyBrace = "｝";

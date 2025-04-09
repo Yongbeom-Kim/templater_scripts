@@ -137,3 +137,5 @@ dist
 
 __snapshots__/
 README.md
+
+/build/
