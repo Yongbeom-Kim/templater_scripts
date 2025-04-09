@@ -1,206 +1,195 @@
-# Anki Clozeify Templater Snippets
+# Anki Cloze-ify Templater Snippets
+This is a script to be used with Obsidian's Templater plugin to automatically transform certain 
 
 ## Install
+There are two steps to installing.
+1. Add custom user script file
+2. Add calls to user script files from Templater templates
+### Adding Script Files
+#### From Source
+```bash
+# Build the project
+yarn build
+# Make a symlink to your templater custom scripts directory
+ln -s $(realpath .)/build/main.js <OBSIDIAN_TEMPLATER_SCRIPTS_DIR>/cloze_transform.js
+```
 
-- `ln -s $(realpath .)/build/main.js <OBSIDIAN_TEMPLATER_SCRIPTS_DIR>/cloze_transform.js`
+### Templates
+I have two templates:
+
+```markdown
+# template 1
+<% tp.user.cloze_transform(tp.file.selection(), {"handle_curly": "fullwidth", "list": {"enable_hints": true}}) %>
+# template 2
+<% tp.user.cloze_transform(tp.file.selection(), {"handle_curly": "fullwidth", "list": {"enable_hints": false}}) %>
+```
 
 ## Specifications
 
-### Transforming Text
+The Anki Clozeify script transforms selected text into Anki cloze deletion format. It supports various Markdown elements and provides options for customizing the transformation.
 
-#### Ordered Lists, Unordered Lists to Cloze
-Here, cloze templates function like normal flash cards, with the FRONT and BACK separated by a dash (` - `) or equals sign(` - `).
+### Example
 
-```markdown
-- normal text
-- Front - Back
-  - Front = Back
-1. Front - Back
-  1. Front = Back
-  2. Front = Back
-```
-becomes:
-```markdown
-%% Note: First part `{{c1::::Front}}` can remain as `Front` with toggle
-- normal text
-- {{c1::::Front}} - {{c1::Back}}
-  - {{c2::::Front}} = {{c2::Back}}
-1. {{c3::::Front}} - {{c3::Back}}
-  1. {{c4::::Front}} = {{c4::Back}}
-  2. {{c5::::Front}} = {{c5::Back}}
-```
+Below is a comprehensive example to intuitively understand the code transformation done.
 
-### Transforming Code
-
-As of the moment, nested code blocks are not supported.
-`````markdown
+**Input:**
 ````markdown
-- Text
+# Programming Concepts
+
+## Lists
+- Python is a high-level language - It's easy to read and write
+- JavaScript runs in browsers - It's the language of the web
+1. HTML structures content - It defines the layout of web pages
+2. CSS styles content - It makes web pages visually appealing
+
+## Code Example
 ```python
-def fn():
-  code()
+def greet(name):
+    # This function prints a greeting
+    if name == "World":
+        print("Hello, World!")
+    else:
+        print(f"Hello, {name}!")
 ```
+
+## Table of Languages
+| Language | Paradigm | Typing |
+|:---------|:--------:|-------:|
+| Python   | Multi-paradigm | Dynamic |
+| JavaScript | Multi-paradigm | Dynamic |
+| Java     | Object-oriented | Static |
 ````
-`````
-#### Comments as Cloze Deletion Markers
-"Code" refers to markdown code blocks, typically written as triple backticks (<code>```</code>).
-In this section, comments are used as markers to indicate cloze deletions within the code.
 
-A code line is converted into a cloze deletion if:
-- It is either preceded by a comment or another line converted into a cloze deletion.
-- Blank lines (potentially with spaces) are never converted into cloze deletions.
-
-A comment spawns a cloze deletion if:
-- The entire line is a (potentially indented) comment (i.e. there is no code before the comment).
-
-Only single-line comments are supported. For languages that support block comments, please ensure block comments are only encompass a single line.
-
- Below is an example demonstrating how this works:
-
+**Output (with `enable_hints: true` and `handle_curly: "fullwidth"`):**
 ````markdown
+# Programming Concepts
+
+## Lists
+- {{c1::::Python is a high-level language}} - {{c1::It's easy to read and write}}
+- {{c2::::JavaScript runs in browsers}} - {{c2::It's the language of the web}}
+1. {{c3::::HTML structures content}} - {{c3::It defines the layout of web pages}}
+2. {{c4::::CSS styles content}} - {{c4::It makes web pages visually appealing}}
+
+## Code Example
 ```python
-# comment
-def function():
-  # another comment
-  some_implementation()
-  some_more_implementation()
-
-  some_other_implementation() # this comment doesn't count
-  os.exit(1)
+def greet(name):
+    # This function prints a greeting
+    {{c5::if name == "World":}}
+        {{c5::print("Hello, World!")}}
+    {{c5::else:}}
+        {{c5::print(f"Hello, {name}!")}}
+    
+    call_irrelevant_function() # just leave a gap to get out of the cloze
 ```
+
+## Table of Languages
+| Language    | Paradigm         | Typing     |
+|:----------- |:----------------:| ----------:|
+| Python      | {{c7::Multi-paradigm}} | {{c8::Dynamic}} |
+| JavaScript  | {{c9::Multi-paradigm}} | {{c10::Dynamic}} |
+| Java        | {{c11::Object-oriented}} | {{c12::Static}} |
 ````
-This becomes:
-````markdown
-```python
-# comment
-{{c1::def function():}}
-  # another comment
-  {{c2::some_implementation()}}
-  {{c2::some_more_implementation()}}
 
-  some_other_implementation() # this comment doesn't count
-  os.exit(1)
-```
-````
-Note that multiline comments are not supported (too much work to write a proper parser for so many languages), so this is the specified behavior:
-```c++
-/* This is
-not ok
-*/
-int main() {
-  // comment
-  call_some_function();
+### Supported Markdown Elements
 
-  /* This is ok */
-  call_some_function();
+1. **Text**: Regular text can be transformed into cloze deletions.
+2. **Lists**: Both ordered and unordered lists are supported.
+   - With hints:
+     - Format: `- Front - back` becomes `- {{c1::::Front}} - {{c1::back}}` (with hints)
+     - Format: `- Front = back` becomes `- {{c1::::Front}} = {{c1::back}}` (with hints)
+   - Without hints:
+     - Format: `- Front - back` becomes `- Front - {{c1::back}}` (without hints)
+     - Format: `- Front = back` becomes `- Front = {{c1::back}}` (without hints)
+3. **Code Blocks**: Code blocks with various languages are supported.
+   - Indentation is preserved (converts spaces to tabs)
+   - HTML characters are properly escaped (`<`, `>`, `&`)
+   - Curly braces are handled according to the specified option
+4. **Tables**: Markdown tables are supported with proper alignment.
 
-}
-```
-This becomes:
-```
-/* This is
-{{c1::not ok}}
-{{c1::*/}}
-{{c1::int main() {}}
-  // comment
-  {{c2::call_some_function();}}
+### Configuration Options
 
-  /* This is ok */
-  {{c3::call_some_function();}}
-}
-```
-Not ideal, so we should keep multiline comments to a single line.
+The script accepts the following options:
 
-#### Conflicts with Curly Braces
-We note that Anki's cloze deletions are delimited by double curly braces, and they take the nearest double curly brace, and therefore any unintended `}}` will throw our clozes off. We resolve this with Zero-Width Joiners (ZWJ), which insert a character in between problematic braces while being invisible.
-
-##### Lines ending with curly braces
-
-Take this program:
-
-```c++
-// Function that returns 1
-int function() {
-  return 1
+```typescript
+{
+  handle_curly: "fullwidth" | "zwj" | "insert_space",
+  list: {
+    enable_hints: boolean
+  }
 }
 ```
 
-If we were to transform it as such:
+#### `handle_curly` Options
+This options handles handing of right curly braces `}` from conflicting with Anki's cloze deletion syntax. E.g. in {{c1::`{{hello}}`}} - Anki improperly parses the first two curly braces "in code" to be the cloze deletion brackets.
 
-```c++
-// Function that returns 1
-{{c1::int function() {}}
-  {{c1::return 1}}
-{{c1::}}} // there is a problem here
+- **`fullwidth`**: Replaces closing curly braces with full-width curly braces (｝)
+- **`zwj`**: Inserts zero-width joiners between consecutive closing curly braces
+- **`insert_space`**: Inserts spaces between consecutive closing curly braces
+
+#### `list` Options
+
+- **`enable_hints`**: When `true`, the first part of a list item becomes a hint (e.g., `{{c1::::Front}} - {{c1::back}}`). When `false`, only the second part becomes a cloze deletion (e.g., `Front - {{c1::back}}`).
+
+### Examples
+
+#### Lists with Hints
+
+Input:
+```
+- Front - back
+- Another - example
 ```
 
-we would run into an issue where Anki thinks the first two braces delimit the cloze deletion. We resolve this issue by adding a ZWJ (visually represented by `_`):
-
-```c++
-// Function that returns 1
-{{c1::int function() {}}
-  {{c1::return 1}}
-{{c1::}_}} // now there is no problem.
+Output (with `enable_hints: true`):
+```
+- {{c1::::Front}} - {{c1::back}}
+- {{c2::::Another}} - {{c2::example}}
 ```
 
-##### Code with double curly braces
-This is not so common, but we can craft an example.
-
-```c++
-std::vector<int> nums = {1, 2, 3, 4, 5};
-
-std::for_each(nums.begin(), nums.end(), [](int n) {
-  // Cloze delete this
-  if (n % 2 == 0) {
-    std::cout << n << " is even\n";
-  }}); // Oops, double curly braces
-
-return 0;
-
+Output (with `enable_hints: false`):
 ```
-Again, we handle this by adding a ZWJ (`_`) to prevent conflicts.
-
-```c++
-std::vector<int> nums = {1, 2, 3, 4, 5};
-
-std::for_each(nums.begin(), nums.end(), [](int n) {
-  // Cloze delete this
-  {{c1::if (n % 2 == 0) {}}
-    {{c1::std::cout << n << " is even\n";}}
-  {{c1::}_}); // Oops, double curly braces}}
-
-return 0;
-
+- Front - {{c1::back}}
+- Another - {{c2::example}}
 ```
 
-For more consecutive curly braces (`}}}`), a ZWJ is added every other curly braces (`}_}_}`).
+#### Code Blocks
 
-#### `<pre>`, `<code>` and line wrapping
-Typically, markdown <code>```</code> code blocks is converted into a series of `<pre><code></pre></code>` blocks, which typically prevents line wrapping. This, however, leads to a _horrible_ experience using Anki on phones.
-
-Therefore, any code:
-````markdown
+Input:
 ```python
-def fn():
-  do_something()
+def test_parser():
+    # comment
+    for i in range(2):
+        if i % 2 == 0:
+            # comment
+            while i < 1:
+                print("Level 4")
 ```
-````
 
-is converted into:
-````markdown
-<pre style="white-space: pre-wrap; overflow-wrap: normal;">
-<code class="language-python">
-def fn():
-  do_something()
-</code>
-</pre>
-````
+Output:
+```python
+def test_parser():
+    # comment
+    {{c1::for i in range(2):}}
+        {{c1::if i % 2 == 0:}}
+            # comment
+            {{c2::while i < 1:}}
+                {{c2::print("Level 4")}}
+```
 
-The additional style tags in `<pre>` will allow line wrapping, and the class in `<code>` will (hopefully) add syntax highlighting.
+#### Tables
 
-#### Normalizing Indents
+Input:
+```
+| Row Headers | Center Aligned! | Right Aligned | Default Aligned |
+|:----------- |:---------------:| -------------:| --------------- |
+| Row 1       |   Row 1 Col 2   |   Row 1 Col 3 | Row 1 Col 4     |
+```
 
-Indents are a problem. 4 spaces, 2 spaces, or tabs?
+Output:
+```
+| Row Headers    |   Center Aligned!    |        Right Aligned | Default Aligned      |
+|:-------------- |:--------------------:| --------------------:| -------------------- |
+| Row 1          | {{c1::Row 1 Col 2}}  |  {{c2::Row 1 Col 3}} | {{c3::Row 1 Col 4}}  |
+```
 
-All code indents are normalized to tabs. For all indents in a code block, we count the number of spaces in it. If there are no spaces, everything is tabs. Great! Some indents have some spaces not a multiple of 4, we consider 2 spaces = 1 indent, and replace every 2 spaces with a tab. If there is an odd number of spaces, we round the last remaining space with another tab. Otherwise, we just replace every 4 spaces with tabs.
 
