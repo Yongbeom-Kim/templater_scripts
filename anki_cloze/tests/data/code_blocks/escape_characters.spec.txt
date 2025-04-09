@@ -1,0 +1,16 @@
+name: Escape characters in code block
+flags: {}
+input:
+```python
+<
+>
+&
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+&lt;
+&gt;
+&amp;
+</code>
+</pre>

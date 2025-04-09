@@ -21,6 +21,16 @@ import { mergeObject } from "../utils/merge_object";
 
 const ZWJ = "\u200D";
 const FullRightCurlyBrace = "｝";
+const EscapedLt = "&lt;";
+const EscapedGt = "&gt;";
+const EscapedAmp = "&amp;";
+
+const escapeHtmlCharacters = (str: string) => {
+  return str
+    .replaceAll("&", EscapedAmp)
+    .replaceAll("<", EscapedLt)
+    .replaceAll(">", EscapedGt);
+};
 
 export type ClozeTransformOptions = {
   handle_curly: "fullwidth" | "zwj" | "insert_space";
@@ -382,11 +392,13 @@ export class ClozeCodeBlockNode extends ClozeParseTreeNode {
       .join("")}\`\`\`${this.endingNewline?.lexeme ?? ""}`;
   }
   toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
+    let content = this.contents
+      .map((t) => t.toClozeText(options, disable_cloze))
+      .join("");
+    content = escapeHtmlCharacters(content);
     return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${
       this.language
-    }">\n${this.contents
-      .map((t) => t.toClozeText(options, disable_cloze))
-      .join("")}</code>\n</pre>${this.endingNewline?.lexeme ?? ""}`;
+    }">\n${content}</code>\n</pre>${this.endingNewline?.lexeme ?? ""}`;
   }
 }
 

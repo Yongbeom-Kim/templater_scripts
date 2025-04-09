@@ -18,7 +18,7 @@ def test_parser():
 	{{c1::for i in range(2):}}
 		{{c1::if i % 2 == 0:}}
 			# comment
-			{{c2::while i < 1:}}
+			{{c2::while i &lt; 1:}}
 				{{c2::print("Level 4")}}
 </code>
 </pre>
@@ -43,7 +43,7 @@ def test_parser():
 	{{c1::for i in range(2):}}
 		{{c1::if i % 2 == 0:}}
 			# comment
-			{{c2::while i < 1:}}
+			{{c2::while i &lt; 1:}}
 				{{c2::print("Level 4")}}
 </code>
 </pre>
@@ -68,7 +68,7 @@ def test_parser():
 	{{c1::for i in range(2):}}
 		{{c1::if i % 2 == 0:}}
 			# comment
-			{{c2::while i < 1:}}
+			{{c2::while i &lt; 1:}}
 				{{c2::print("Level 4")}}
 </code>
 </pre>
@@ -93,7 +93,7 @@ def test_parser():
 	{{c1::for i in range(2):}}
 		{{c1::if i % 2 == 0:}}
 			# comment
-			{{c2::while i < 1:}}
+			{{c2::while i &lt; 1:}}
 				{{c2::print("Level 4")}}
 </code>
 </pre>
