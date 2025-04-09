@@ -9,6 +9,7 @@ describe("test spec", () => {
     "code_blocks/indents.spec.txt",
     "code_blocks/languages.spec.txt",
     "table/main.spec.txt",
+    "table/empty.spec.txt",
     "text/curly_braces.spec.txt",
     "text/lists.spec.txt",
   ])("%s", (name) => {

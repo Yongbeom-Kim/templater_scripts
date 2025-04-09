@@ -125,6 +125,9 @@ const tryParseTableRow = (
   let content: Token[], endingNewline: Token | undefined;
   [state, content] = state.consumeUntilType(TokenType.Newline, false);
   [state, [endingNewline]] = state.consume();
+  if (content.length === 0) {
+    return [backupState, null];
+  }
   if (
     endingNewline &&
     (endingNewline.type !== TokenType.Newline || endingNewline.lexeme !== "\n")

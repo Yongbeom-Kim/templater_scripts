@@ -1,0 +1,29 @@
+name: Empty lines are not mistaken for tables (dots for .trim())
+flags: {}
+input:
+.
+
+
+
+
+
+
+
+
+
+
+.
+expected:
+.
+
+
+
+
+
+
+
+
+
+
+.
+---

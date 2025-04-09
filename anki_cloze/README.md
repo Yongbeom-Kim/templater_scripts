@@ -1,5 +1,9 @@
 # Anki Clozeify Templater Snippets
 
+## Install
+
+- `ln -s $(realpath .)/build/main.js <OBSIDIAN_TEMPLATER_SCRIPTS_DIR>/cloze_transform.js`
+
 ## Specifications
 
 ### Transforming Text
