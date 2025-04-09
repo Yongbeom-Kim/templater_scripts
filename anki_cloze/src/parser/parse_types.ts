@@ -233,40 +233,47 @@ export class TableNode extends ParseTreeNode {
   }
 
   toText(): string {
-    return this.headers.toText() + "\n" + this.rows.map((r) => r.toText()).join("\n") + (this.endingNewline?.lexeme ?? "");
+    return (
+      this.headers.toText() +
+      "\n" +
+      this.rows.map((r) => r.toText()).join("\n") +
+      (this.endingNewline?.lexeme ?? "")
+    );
   }
 }
 
 export type TableAlignment = "left" | "center" | "right" | "none";
 export class TableHeaderNode extends ParseTreeNode {
   type = ParseTreeNodeType.TableHeader;
-  constructor(
-    public readonly contents: TableCellNode[],
-  ) {
+  constructor(public readonly contents: TableCellNode[]) {
     super();
   }
   toText(): string {
-    const header = "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
-    const separator = "|" + this.contents.map((c) => {
-      switch (c.alignment) {
-        case "left":
-          return ":" + "-".repeat(c.colWidth - 1);
-        case "center":
-          return ":" + "-".repeat(c.colWidth - 2) + ":";
-        case "right":
-          return "-".repeat(c.colWidth - 1) + ":";
-        default:
-          return "-".repeat(c.colWidth);
-      }
-    }).join("|") + "|";
+    const header =
+      "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
+    const separator =
+      "|" +
+      this.contents
+        .map((c) => {
+          switch (c.alignment) {
+            case "left":
+              return ":" + "-".repeat(c.colWidth - 1);
+            case "center":
+              return ":" + "-".repeat(c.colWidth - 2) + ":";
+            case "right":
+              return "-".repeat(c.colWidth - 1) + ":";
+            default:
+              return "-".repeat(c.colWidth);
+          }
+        })
+        .join("|") +
+      "|";
     return header + "\n" + separator;
   }
 }
 export class TableRowNode extends ParseTreeNode {
   type = ParseTreeNodeType.TableRow;
-  constructor(
-    public readonly contents: TableCellNode[],
-  ) {
+  constructor(public readonly contents: TableCellNode[]) {
     super();
   }
   toText(): string {
@@ -295,7 +302,8 @@ export class TableCellNode extends ParseTreeNode {
       case "center":
         const leftPadding = Math.floor(padding / 2);
         const rightPadding = padding - leftPadding;
-        paddedText = " ".repeat(leftPadding) + contentText + " ".repeat(rightPadding);
+        paddedText =
+          " ".repeat(leftPadding) + contentText + " ".repeat(rightPadding);
         break;
       case "right":
         paddedText = " ".repeat(padding) + contentText;
