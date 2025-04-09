@@ -26,8 +26,11 @@ declare global {
 }
 
 String.prototype.__delimit = function (delimiter: string): string[] {
-  const [first, ...rest] = this.split(delimiter);
-  return [first, rest.join(delimiter)];
+  const index = this.indexOf(delimiter);
+  if (index === -1) {
+    return [String(this), ""];
+  }
+  return [this.slice(0, index), this.slice(index + delimiter.length)];
 };
 
 function parseSpec(data: string): TestCase[] {
@@ -35,7 +38,7 @@ function parseSpec(data: string): TestCase[] {
   const sections = data
     .replaceAll("<ZWJ>", ZWJ)
     .replaceAll("<TAB>", "\t")
-    .split("---")
+    .split("\n---")
     .map((section) => section.trim())
     .filter((section) => section);
 

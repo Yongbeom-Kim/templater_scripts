@@ -7,6 +7,10 @@ import {
   CodeLineNode,
   IndentNode,
   CodeBlockLanguage,
+  TableHeaderNode,
+  TableRowNode,
+  TableCellNode,
+  TableAlignment,
 } from "../../parser/parse_types";
 
 import { ParseTreeNode } from "../../parser/parse_types";
@@ -190,6 +194,144 @@ export class ClozeListNode extends ClozeParseTreeNode {
       this.contents.map((t) => t.toClozeText(options, disable_cloze)).join("") +
       (this.endingNewline?.lexeme ?? "")
     );
+  }
+}
+
+export class ClozeTableNode extends ClozeParseTreeNode {
+type = ParseTreeNodeType.Table;
+
+constructor(
+  public readonly headers: ClozeTableHeaderNode,
+  public readonly rows: ClozeTableRowNode[],
+  public readonly endingNewline?: Token, // undefined if EOF
+) {
+  super({ is_deletion: false, is_hint: false, cloze_index: -1 });
+}
+
+  toText(): string {
+    return this.headers.toText() + "\n" + this.rows.map((r) => r.toText()).join("\n") + (this.endingNewline?.lexeme ?? "");
+  }
+  toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
+    return this.headers.toClozeText(options, disable_cloze) + "\n" + this.rows.map((r) => r.toClozeText(options, disable_cloze)).join("\n") + (this.endingNewline?.lexeme ?? "");
+  }
+}
+
+export class ClozeTableHeaderNode extends ClozeParseTreeNode{
+  type = ParseTreeNodeType.TableHeader;
+  constructor(
+    public readonly contents: ClozeTableCellNode[],
+  ) {
+    super({ is_deletion: false, is_hint: false, cloze_index: -1 });
+  }
+  toText(): string {
+    const header = "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
+    const separator = "|" + this.contents.map((c) => {
+      switch (c.alignment) {
+        case "left":
+          return ":" + "-".repeat(c.colWidth - 1);
+        case "center":
+          return ":" + "-".repeat(c.colWidth - 2) + ":";
+        case "right":
+          return "-".repeat(c.colWidth - 1) + ":";
+        default:
+          return "-".repeat(c.colWidth);
+      }
+    }).join("|") + "|";
+    return header + "\n" + separator;
+  }
+  toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
+    const header = "| " + this.contents.map((c) => c.toClozeText(options, disable_cloze)).join(" | ") + " |";
+    const separator = "|" + this.contents.map((c) => {
+      switch (c.alignment) {
+        case "left":
+          return ":" + "-".repeat(c.clozeColWidth) + " ";
+        case "center":
+          return ":" + "-".repeat(c.clozeColWidth) + ":";
+        case "right":
+          return " " + "-".repeat(c.clozeColWidth) + ":";
+        default:
+          return " " + "-".repeat(c.clozeColWidth) + " ";
+      }
+    }).join("|") + "|";
+    return header + "\n" + separator;
+  }
+}
+
+export class ClozeTableRowNode extends ClozeParseTreeNode {
+  type = ParseTreeNodeType.TableRow;
+  
+  constructor(
+    public readonly contents: ClozeTableCellNode[],
+  ) {
+    super({ is_deletion: false, is_hint: false, cloze_index: -1 });
+  }
+  toText(): string {
+    return "|" + this.contents.map((c) => c.toText()).join("|") + "|";
+  }
+
+  toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
+    return "| " + this.contents.map((c) => c.toClozeText(options, disable_cloze)).join(" | ") + " |";
+  }
+}
+
+export class ClozeTableCellNode extends ClozeParseTreeNode {
+  type = ParseTreeNodeType.TableCell;
+  constructor(
+    public readonly cloze_type: ClozeDeletionType,  
+    public readonly contents: Token[],
+    public readonly alignment: TableAlignment,
+    public readonly colWidth: number, // number of characters between " | " separators (including spaces)
+    public readonly clozeColWidth: number, // number of characters between " | " separators in cloze deletions (including spaces)
+  ) {
+    super(cloze_type);
+  }
+  toText(): string {
+    const contentText = this.contents.map((c) => c.lexeme).join("");
+    const padding = this.colWidth - contentText.length;
+    let paddedText;
+
+    switch (this.alignment) {
+      case "left":
+        case "none":
+        paddedText = contentText + " ".repeat(padding);
+        break;
+      case "center":
+        const leftPadding = Math.floor(padding / 2);
+        const rightPadding = padding - leftPadding;
+        paddedText = " ".repeat(leftPadding) + contentText + " ".repeat(rightPadding);
+        break;
+      case "right":
+        paddedText = " ".repeat(padding) + contentText;
+        break;
+    }
+
+    return paddedText;
+  }
+
+  toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
+    let contentText = (this.contents.map((c) => c.lexeme).join(""));
+    if (!disable_cloze) {
+      contentText = cloze_delete(contentText, this.cloze_type, options);
+    }
+    const padding = this.clozeColWidth - contentText.length;
+    let paddedText;
+
+    switch (this.alignment) {
+      case "left":
+      case "none":
+        paddedText = contentText + " ".repeat(padding);
+        break;
+      case "center":
+        const leftPadding = Math.floor(padding / 2);
+        const rightPadding = padding - leftPadding;
+        paddedText = " ".repeat(leftPadding) + contentText + " ".repeat(rightPadding);
+        break;
+      case "right":
+        paddedText = " ".repeat(padding) + contentText;
+        break;
+    }
+
+    return paddedText;
   }
 }
 

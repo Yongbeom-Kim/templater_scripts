@@ -6,6 +6,9 @@ import {
   ParseTreeNode,
   ParseTreeNodeType,
   ParseTreeVisitor,
+  TableHeaderNode,
+  TableNode,
+  TableRowNode,
   TextLineNode,
   TextNode,
 } from "../../parser/parse_types";
@@ -16,6 +19,10 @@ import {
   ClozeIndentNode,
   ClozeListNode,
   ClozeParseTreeNode,
+  ClozeTableCellNode,
+  ClozeTableHeaderNode,
+  ClozeTableNode,
+  ClozeTableRowNode,
   ClozeTextLineNode,
   ClozeTextNode,
   ClozeTransformOptions,
@@ -23,7 +30,7 @@ import {
 
 export const clozify = (
   tree: ParseTreeNode[],
-  options: ClozeTransformOptions,
+  options: ClozeTransformOptions
 ): ClozeParseTreeNode[] => {
   const visitor = new ClozifyVisitor(options);
   tree.forEach((node) => node.visit(visitor));
@@ -56,10 +63,18 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       this.visitTextLineNode(node);
     } else if (node instanceof CodeBlockNode) {
       this.visitCodeBlockNode(node);
+    } else if (node instanceof TableNode) {
+      this.visitTableNode(node);
+    } else if (node instanceof TableHeaderNode) {
+      this.visitTableHeaderNode(node);
+    } else if (node instanceof TableRowNode) {
+      this.visitTableRowNode(node);
     }
     if (this._transformedNodes.length != prevTransformedNodesLength + 1) {
       throw new Error(
-        `Expected 1 node to be added to the transformed nodes every visit. ${node.type} ${this.debug()}`,
+        `Expected 1 node to be added to the transformed nodes every visit. ${
+          node.type
+        } ${this.debug()}`
       );
     }
   }
@@ -69,7 +84,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitTextNode(node: TextNode): void {
     if (node instanceof ClozeTextNode) {
       throw new Error(
-        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`,
+        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`
       );
     }
     this._visitStack.push(node);
@@ -80,8 +95,8 @@ export class ClozifyVisitor extends ParseTreeVisitor {
           is_hint: false,
           cloze_index: this._cloze_number,
         },
-        node.contents,
-      ),
+        node.contents
+      )
     );
     this._visitStack.pop();
   }
@@ -89,17 +104,17 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitIndentNode(node: IndentNode): void {
     if (node instanceof ClozeIndentNode) {
       throw new Error(
-        `ClozeIndentNode can only be encountered after we transform the parse tree. ${this.debug()}`,
+        `ClozeIndentNode can only be encountered after we transform the parse tree. ${this.debug()}`
       );
     }
     if (this._spacesPerTab === undefined) {
       throw new Error(
-        `IndentNode can only be encountered after we transform the parse tree and we determine spaces per tab. ${this.debug()}`,
+        `IndentNode can only be encountered after we transform the parse tree and we determine spaces per tab. ${this.debug()}`
       );
     }
     this._visitStack.push(node);
     this._transformedNodes.push(
-      new ClozeIndentNode(node.n_spaces, node.n_tabs, this._spacesPerTab),
+      new ClozeIndentNode(node.n_spaces, node.n_tabs, this._spacesPerTab)
     );
     this._spacesPerTab = undefined;
     this._visitStack.pop();
@@ -124,8 +139,8 @@ export class ClozifyVisitor extends ParseTreeVisitor {
         },
         indent,
         contents,
-        node.endingNewline,
-      ),
+        node.endingNewline
+      )
     );
     this._visitStack.pop();
   }
@@ -141,17 +156,17 @@ export class ClozifyVisitor extends ParseTreeVisitor {
   visitListNode(node: ListNode): void {
     if (node.contents.length !== 1) {
       throw new Error(
-        `TextLineNode (before transformation) can only have one child. ${this.debug()}`,
+        `TextLineNode (before transformation) can only have one child. ${this.debug()}`
       );
     }
     if (node.contents[0] instanceof ClozeTextNode) {
       throw new Error(
-        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`,
+        `ClozeTextNode can only be encountered after we transform the parse tree. ${this.debug()}`
       );
     }
     if (!(node.contents[0] instanceof TextNode)) {
       throw new Error(
-        `TextLineNode (before transformation) can only have one child that is a TextNode. ${this.debug()}`,
+        `TextLineNode (before transformation) can only have one child that is a TextNode. ${this.debug()}`
       );
     }
     this._visitStack.push(node);
@@ -174,7 +189,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
               is_hint: this._options.list.enable_hints,
               cloze_index: this._cloze_number,
             },
-            front,
+            front
           ),
           new ClozeTextNode(
             {
@@ -182,7 +197,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
               is_hint: false,
               cloze_index: this._cloze_number,
             },
-            tokens.slice(i, i + 3),
+            tokens.slice(i, i + 3)
           ),
           new ClozeTextNode(
             {
@@ -190,7 +205,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
               is_hint: false,
               cloze_index: this._cloze_number,
             },
-            back,
+            back
           ),
         ];
         this._cloze_number++;
@@ -210,7 +225,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       indent,
       node.marker,
       transformed_contents,
-      node.endingNewline,
+      node.endingNewline
     );
     this._transformedNodes.push(transformed_node);
 
@@ -243,8 +258,8 @@ export class ClozifyVisitor extends ParseTreeVisitor {
           },
           indent,
           contents,
-          child.endingNewline,
-        ),
+          child.endingNewline
+        )
       );
     };
 
@@ -271,7 +286,11 @@ export class ClozifyVisitor extends ParseTreeVisitor {
     if (convertCloze) this._cloze_number++;
     if (children.length !== node.contents.length) {
       throw new Error(
-        `Expected the same number of children as the original node. Original node has ${node.contents.length} children, but transformed node has ${children.length} children. ${this.debug()}`,
+        `Expected the same number of children as the original node. Original node has ${
+          node.contents.length
+        } children, but transformed node has ${
+          children.length
+        } children. ${this.debug()}`
       );
     }
     const transformed_node = new ClozeCodeBlockNode(
@@ -279,11 +298,80 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       node.language,
       children,
       spacesPerTab,
-      node.endingNewline,
+      node.endingNewline
     );
     this._transformedNodes.push(transformed_node);
     this._visitStack.pop();
   }
+
+  visitTableNode(node: TableNode): void {
+    this._visitStack.push(node);
+    const { headers, rows } = node;
+
+    const n_cols = rows.length;
+    const n_rows = headers.contents.length;
+    const n_clozes = (n_cols) * (n_rows - 1);
+    const additional_col_size = n_clozes.toString().length + 7;
+
+    const transformed_headers = new ClozeTableHeaderNode(
+      headers.contents.map((c) => {
+        return new ClozeTableCellNode(
+          {
+            is_deletion: false,
+            is_hint: false,
+            cloze_index: -1,
+          },
+          c.contents,
+          c.alignment,
+          c.colWidth,
+          c.colWidth + additional_col_size
+        );
+      })
+    );
+
+    const transformed_rows = rows.map((r) => {
+      return new ClozeTableRowNode(
+        r.contents.map((c, cIdx) => {
+          const is_deletion = cIdx !== 0;
+          const cloze_index = is_deletion ? this._cloze_number++ : -1;
+          return new ClozeTableCellNode(
+            {
+              is_deletion,
+              is_hint: false,
+              cloze_index,
+            },
+            c.contents,
+            c.alignment,
+            c.colWidth,
+            c.colWidth + additional_col_size
+          );
+        })
+      );
+    });
+
+    this._transformedNodes.push(
+      new ClozeTableNode(
+        transformed_headers,
+        transformed_rows,
+        node.endingNewline
+      )
+    );
+    this._visitStack.pop();
+  }
+
+  visitTableHeaderNode(node: TableHeaderNode): void {
+    this._visitStack.push(node);
+    const transformed_node = new ClozeTableHeaderNode(
+      node.contents.map((c) => {
+        this.visit(c);
+        return this._transformedNodes.pop()! as ClozeTableCellNode;
+      })
+    );
+    this._transformedNodes.push(transformed_node);
+    this._visitStack.pop();
+  }
+
+  visitTableRowNode(node: TableRowNode): void {}
 
   get transformedNodes(): ClozeParseTreeNode[] {
     return this._transformedNodes;

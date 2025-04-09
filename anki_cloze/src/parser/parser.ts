@@ -11,6 +11,11 @@ import {
   ParserState,
   TextLineNode,
   TextNode,
+  TableAlignment,
+  TableHeaderNode,
+  TableCellNode,
+  TableRowNode,
+  TableNode,
 } from "./parse_types";
 
 export const parse = (tokens: Token[]): ParseTreeNode[] => {
@@ -18,6 +23,11 @@ export const parse = (tokens: Token[]): ParseTreeNode[] => {
   let state = new ParserState(tokens);
   while (state.good()) {
     let node: ParseTreeNode | null = null;
+    [state, node] = tryParseTable(state);
+    if (node) {
+      result.push(node);
+      continue;
+    }
     [state, node] = tryParseCodeBlock(state);
     if (node) {
       result.push(node);
@@ -31,17 +41,166 @@ export const parse = (tokens: Token[]): ParseTreeNode[] => {
     throw new Error(
       `Unreachable code reached in parse function. Document: "${tokens
         .map((t) => t.lexeme)
-        .join("")}", Token: "${state.peek()[0].lexeme}", Index: ${state.next}`,
+        .join("")}", Token: "${state.peek()[0].lexeme}", Index: ${state.next}`
     );
   }
   return result;
+};
+
+const tryParseTable = (
+  state: ParserState
+): [ParserState, ParseTreeNode | null] => {
+  if (!state.isStartOfLine()) {
+    return [state, null];
+  }
+  const backupState = state;
+  let headerCells, headerAlignment, rowCells;
+
+  // Try to parse the table header row
+  [state, headerCells] = tryParseTableRow(state);
+  if (!headerCells) {
+    return [backupState, null];
+  }
+
+  // Try to parse the table header separator
+  [state, headerAlignment] = tryParseTableHeaderSeparator(state);
+  if (!headerAlignment) {
+    return [backupState, null];
+  }
+
+  // row[i] = ith row of table
+  // row[i][j] = jth cell of ith row
+  // row[i][j][k] = kth token of jth cell of ith row
+  const rows: Token[][][] = [];
+  while (true) {
+    [state, rowCells] = tryParseTableRow(state);
+    if (!rowCells) {
+      break;
+    }
+    rows.push(rowCells);
+  }
+
+  const colWidths = headerCells.map((headerCell, colIdx) =>
+    Math.max(
+      headerCell.length,
+      ...rows.map(row => {
+        const cell = row[colIdx] || [];
+        return cell.reduce((sum, token) => sum + token.lexeme.length, 0);
+      })
+    )
+  );
+
+  const headerNode = new TableHeaderNode(
+    headerCells.map((cell, index) =>
+      new TableCellNode(cell, headerAlignment[index], colWidths[index])
+    )
+  );
+  const rowsNode = rows.map(row => new TableRowNode(
+    row.map((cell, index) =>
+      new TableCellNode(cell, headerAlignment[index], colWidths[index])
+    )
+  ));
+
+  return [state, new TableNode(headerNode, rowsNode)];
+};
+
+/**
+ * Attempts to parse a table row from the current position
+ * @param state - The current parser state
+ * @returns A tuple containing the new parser state and the parsed table row
+ * each cell in the row is represented as a list of tokens
+ */
+const tryParseTableRow = (
+  state: ParserState
+): [ParserState, Token[][] | null] => {
+  if (state.eof()) {
+    return [state, null];
+  }
+  const backupState = state;
+  let content: Token[], endingNewline: Token | undefined;
+  [state, content] = state.consumeUntilType(TokenType.Newline, false);
+  [state, [endingNewline]] = state.consume();
+  if (
+    endingNewline &&
+    (endingNewline.type !== TokenType.Newline ||
+    endingNewline.lexeme !== "\n")
+  ) {
+    return [backupState, null];
+  }
+
+  const cells: Token[][] = [];
+  for (let i = 0; i < content.length; ) {
+    const cell = content[i];
+    if (cell.type !== TokenType.Punctuation || cell.lexeme !== "|") {
+      return [backupState, null];
+    }
+    i++;
+    if (i == content.length) {
+      break;
+    }
+    if (content[i].type === TokenType.Whitespace) {
+      i++;
+    }
+    const cellContent: Token[] = [];
+    while (i < content.length && content[i].lexeme !== "|") {
+      cellContent.push(content[i]);
+      i++;
+    }
+    if (cellContent[cellContent.length - 1].type === TokenType.Whitespace) {
+      cellContent.pop();
+    }
+    cells.push(cellContent);
+  }
+
+  return [state, cells];
+};
+
+const tryParseTableHeaderSeparator = (
+  state: ParserState
+): [ParserState, TableAlignment[] | null] => {
+  const backupState = state;
+  let alignment: TableAlignment[] = [];
+  let peeked: Token[] = [];
+  let endingNewline: Token | undefined;
+  [state, peeked] = state.consumeUntilType(TokenType.Newline, false);
+  [state, [endingNewline]] = state.consume();
+  for (let i = 0; i < peeked.length; i++) {
+    switch (peeked[i].type) {
+      case TokenType.Whitespace:
+        continue;
+      case TokenType.Punctuation:
+        if (/^\|?:-+:\|?$/.test(peeked[i].lexeme)) {
+          alignment.push("center");
+        } else if (/^\|?:-+\|?$/.test(peeked[i].lexeme)) {
+          alignment.push("left");
+        } else if (/^\|?-+:\|?$/.test(peeked[i].lexeme)) {
+          alignment.push("right");
+        } else if (/^\|?-+\|?$/.test(peeked[i].lexeme)) {
+          alignment.push("none");
+        } else if (peeked[i].lexeme === "|") {
+          continue;
+        } else {
+          console.error(
+            `Invalid table header separator alignment: "${peeked[i].lexeme}"`
+          );
+          return [backupState, null];
+        }
+        break;
+      default:
+        console.error(
+          `Invalid table header separator alignment: "${peeked[i].lexeme}"`
+        );
+        return [backupState, null];
+    }
+  }
+  return [state, alignment];
 };
 
 /**
  * Attempts to parse a code block from the current position
  */
 const tryParseCodeBlock = (
-  state: ParserState,
+  state: ParserState
 ): [ParserState, ParseTreeNode | null] => {
   if (!state.isStartOfLine()) {
     return [state, null];
@@ -107,16 +266,18 @@ const tryParseCodeBlock = (
 
 const parseCodeLine = (
   language: CodeBlockLanguage,
-  state: ParserState,
+  state: ParserState
 ): [ParserState, CodeLineNode] => {
   let indent, contents, endingNewline, comment;
   [state, indent] = state.consumeOnlyType(TokenType.Whitespace);
   if (indent.length > 1) {
     throw new Error(
-      `Assertion failed in parseCodeLine function. Whitespace tokens should all be combined into one token. Indent: "${indent.map((t) => t.lexeme).join("")}", Token Chain: "${state
+      `Assertion failed in parseCodeLine function. Whitespace tokens should all be combined into one token. Indent: "${indent
+        .map((t) => t.lexeme)
+        .join("")}", Token Chain: "${state
         .peek()
         .map((t) => t.lexeme)
-        .join("")}"`,
+        .join("")}"`
     );
   }
   comment = isComment(language, state);
@@ -128,7 +289,7 @@ const parseCodeLine = (
       new CodeCommentNode(
         IndentNode.FromWhitespace(indent[0]),
         [TextNode.FromTokens(contents)],
-        endingNewline,
+        endingNewline
       ),
     ];
   }
@@ -137,7 +298,7 @@ const parseCodeLine = (
     new CodeLineNode(
       IndentNode.FromWhitespace(indent[0]),
       [TextNode.FromTokens(contents)],
-      endingNewline,
+      endingNewline
     ),
   ];
 };
@@ -146,7 +307,7 @@ const parseCodeLine = (
  * Attempts to parse either a list item or a text line from the current position
  */
 const tryParseLine = (
-  state: ParserState,
+  state: ParserState
 ): [ParserState, ParseTreeNode | null] => {
   if (!state.isStartOfLine()) {
     return [state, null];
@@ -165,7 +326,7 @@ const tryParseLine = (
         .join("|")}", Token Chain: "${state
         .peek()
         .map((t) => t.lexeme)
-        .join("")}"`,
+        .join("")}"`
     );
   }
 
@@ -183,7 +344,7 @@ const tryParseLine = (
         IndentNode.FromWhitespace(indent[0]),
         marker,
         [TextNode.FromTokens(content)],
-        endingNewline,
+        endingNewline
       ),
     ];
   }
@@ -197,42 +358,15 @@ const tryParseLine = (
       new TextLineNode(
         IndentNode.FromWhitespace(indent[0]),
         [TextNode.FromTokens(content)],
-        endingNewline,
+        endingNewline
       ),
     ];
   }
 
   console.warn(
-    `Start of line, but no tokens found. This should be unreachable. ${newState.debug()}`,
+    `Start of line, but no tokens found. This should be unreachable. ${newState.debug()}`
   );
   return [state, null];
-};
-
-const getIndentLevel = (tokens: Token[]): number => {
-  const level = tokens.reduce((acc, token) => {
-    if (token.type === TokenType.Whitespace) {
-      for (let i = 0; i < token.lexeme.length; i++) {
-        if (token.lexeme[i] === " ") {
-          acc += 1 / 2;
-        } else if (token.lexeme[i] === "\t") {
-          acc += 1;
-        } else {
-          throw new Error(
-            `Unreachable code reached in getIndentLevel function. Token: "${
-              token.lexeme
-            }", Token Chain: "${tokens.map((t) => t.lexeme).join("")}"`,
-          );
-        }
-      }
-      return acc;
-    }
-    throw new Error(
-      `Unreachable code reached in getIndentLevel function. Token: "${
-        token.lexeme
-      }", Token Chain: "${tokens.map((t) => t.lexeme).join("")}"`,
-    );
-  }, 0);
-  return Math.ceil(level);
 };
 
 const peekUnorderedListMarker = (state: ParserState): boolean => {

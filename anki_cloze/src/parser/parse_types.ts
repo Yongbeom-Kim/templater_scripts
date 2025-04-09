@@ -107,6 +107,10 @@ export enum ParseTreeNodeType {
   CodeBlock = "code_block",
   CodeLine = "code_line",
   CodeComment = "code_comment",
+  Table = "table",
+  TableHeader = "table_header",
+  TableRow = "table_row",
+  TableCell = "table_cell",
 }
 
 export abstract class ParseTreeVisitor {
@@ -214,6 +218,94 @@ export class ListNode extends TextLineNode {
       this.contents.map((t) => t.toText()).join("") +
       (this.endingNewline?.lexeme ?? "")
     );
+  }
+}
+
+export class TableNode extends ParseTreeNode {
+  type = ParseTreeNodeType.Table;
+
+  constructor(
+    public readonly headers: TableHeaderNode,
+    public readonly rows: TableRowNode[],
+    public readonly endingNewline?: Token, // undefined if EOF
+  ) {
+    super();
+  }
+
+  toText(): string {
+    return this.headers.toText() + "\n" + this.rows.map((r) => r.toText()).join("\n") + (this.endingNewline?.lexeme ?? "");
+  }
+}
+
+export type TableAlignment = "left" | "center" | "right" | "none";
+export class TableHeaderNode extends ParseTreeNode {
+  type = ParseTreeNodeType.TableHeader;
+  constructor(
+    public readonly contents: TableCellNode[],
+  ) {
+    super();
+  }
+  toText(): string {
+    const header = "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
+    const separator = "|" + this.contents.map((c) => {
+      switch (c.alignment) {
+        case "left":
+          return ":" + "-".repeat(c.colWidth - 1);
+        case "center":
+          return ":" + "-".repeat(c.colWidth - 2) + ":";
+        case "right":
+          return "-".repeat(c.colWidth - 1) + ":";
+        default:
+          return "-".repeat(c.colWidth);
+      }
+    }).join("|") + "|";
+    return header + "\n" + separator;
+  }
+}
+export class TableRowNode extends ParseTreeNode {
+  type = ParseTreeNodeType.TableRow;
+  constructor(
+    public readonly contents: TableCellNode[],
+  ) {
+    super();
+  }
+  toText(): string {
+    return "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
+  }
+}
+
+export class TableCellNode extends ParseTreeNode {
+  type = ParseTreeNodeType.TableCell;
+  constructor(
+    public readonly contents: Token[],
+    public readonly alignment: TableAlignment,
+    public readonly colWidth: number, // number of characters between "|" separators
+  ) {
+    super();
+  }
+  toText(): string {
+    const contentText = this.contents.map((c) => c.lexeme).join("");
+    const padding = this.colWidth - contentText.length;
+    let paddedText;
+
+    switch (this.alignment) {
+      case "left":
+        paddedText = contentText + " ".repeat(padding);
+        break;
+      case "center":
+        const leftPadding = Math.floor(padding / 2);
+        const rightPadding = padding - leftPadding;
+        paddedText = " ".repeat(leftPadding) + contentText + " ".repeat(rightPadding);
+        break;
+      case "right":
+        paddedText = " ".repeat(padding) + contentText;
+        break;
+      case "none":
+        paddedText = contentText;
+        break;
+    }
+
+    return paddedText;
   }
 }
 
