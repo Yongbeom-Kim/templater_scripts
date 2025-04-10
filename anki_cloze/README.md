@@ -67,23 +67,23 @@ def greet(name):
 2. {{c4::::CSS styles content}} - {{c4::It makes web pages visually appealing}}
 
 ## Code Example
-```python
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
 def greet(name):
-    # This function prints a greeting
-    {{c5::if name == "World":}}
-        {{c5::print("Hello, World!")}}
-    {{c5::else:}}
-        {{c5::print(f"Hello, {name}!")}}
-    
-    call_irrelevant_function() # just leave a gap to get out of the cloze
-```
+	# This function prints a greeting
+	{{c5::if name == "World":}}
+		{{c5::print("Hello, World!")}}
+	{{c5::else:}}
+		{{c5::print(f"Hello, {name｝!")}}
+</code>
+</pre>
 
 ## Table of Languages
-| Language           |         Paradigm         |           Typing |
-|:------------------ |:------------------------:| ----------------:|
-| {{c6::Python}}     |  {{c7::Multi-paradigm}}  |  {{c8::Dynamic}} |
-| {{c9::JavaScript}} | {{c10::Multi-paradigm}}  | {{c11::Dynamic}} |
-| {{c12::Java}}      | {{c13::Object-oriented}} |  {{c14::Static}} |
+| Language              |          Paradigm          |             Typing |
+|:--------------------- |:--------------------------:| ------------------:|
+| Python                |   {{c6::Multi-paradigm}}   |    {{c7::Dynamic}} |
+| JavaScript            |   {{c8::Multi-paradigm}}   |    {{c9::Dynamic}} |
+| Java                  |  {{c10::Object-oriented}}  |    {{c11::Static}} |
 ````
 
 ## Install
