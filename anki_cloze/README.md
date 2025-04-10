@@ -1,8 +1,13 @@
 # Anki Cloze-ify Templater Snippets
-This is a script to be used with Obsidian's Templater plugin to automatically transform certain 
+This is a script used together with Obsidian's [Templater](https://obsidian.md/plugins?id=templater-obsidian) and [Obsidian_to_Anki](https://github.com/ObsidianToAnki/Obsidian_to_Anki) plugins.
 
-![](anki_cloze/doc/assets/demo.gif)
-## Overviwe
+The reason why I created this script was because (1) I wanted to have an easy way of creating Anki notes from Obsidian, but (2) I wanted to do it in a way that takes as little time as possible. You won't catch me manually creating flash cards or cloze deletions. I also don't really like seeing all the `<!--ID: 1711270037948-->` comments generated in my notes.
+
+This Templater script transforms Markdown code to Cloze deletions based on a few simple rules, so that it can be painlessly integrated, but out of sight, into each note. Watch me create some cloze deletions with a few Templater templates and vim keybinds:
+
+![demo](https://github.com/user-attachments/assets/ba8556ac-357f-4b89-9af9-ca0fefcb0f61)
+
+## Overview
 
 The Anki Clozeify script transforms selected text into Anki cloze deletion format. It supports various Markdown elements and provides options for customizing the transformation.
 
@@ -21,7 +26,7 @@ For other miscellaneous transformations:
 
 ### Example
 
-Below is a comprehensive example to intuitively understand the code transformation done.
+Below is a nice example to intuitively understand the transformation done.
 
 **Input:**
 ````markdown
@@ -82,6 +87,8 @@ def greet(name):
 ````
 
 ## Install
+Havent thought about this yet
+
 There are two steps to installing.
 1. Add custom user script file
 2. Add calls to user script files from Templater templates
