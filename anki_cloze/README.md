@@ -1,6 +1,7 @@
 # Anki Cloze-ify Templater Snippets
 This is a script to be used with Obsidian's Templater plugin to automatically transform certain 
 
+![](anki_cloze/doc/assets/demo.gif)
 ## Overviwe
 
 The Anki Clozeify script transforms selected text into Anki cloze deletion format. It supports various Markdown elements and provides options for customizing the transformation.
