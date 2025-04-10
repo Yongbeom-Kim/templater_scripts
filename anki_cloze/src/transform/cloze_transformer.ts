@@ -248,6 +248,7 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       });
       children.push(
         new ClozeCodeLineNode(
+          node.language,
           {
             is_deletion:
               child.type === ParseTreeNodeType.CodeComment

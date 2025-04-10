@@ -21,21 +21,18 @@ import { mergeObject } from "../utils/merge_object";
 
 const ZWJ = "\u200D";
 const FullRightCurlyBrace = "｝";
-const EscapedLt = "&lt;";
-const EscapedGt = "&gt;";
-const EscapedAmp = "&amp;";
-
-const escapeHtmlCharacters = (str: string) => {
-  return str
-    .replaceAll("&", EscapedAmp)
-    .replaceAll("<", EscapedLt)
-    .replaceAll(">", EscapedGt);
-};
 
 export type ClozeTransformOptions = {
   handle_curly: "fullwidth" | "zwj" | "insert_space";
   list: {
     enable_hints: boolean;
+  };
+  code: {
+    transform_mode:
+      | "markdown_block"
+      | "markdown_inline"
+      | "html_block"
+      | "html_inline";
   };
 };
 
@@ -395,16 +392,64 @@ export class ClozeCodeBlockNode extends ClozeParseTreeNode {
     let content = this.contents
       .map((t) => t.toClozeText(options, disable_cloze))
       .join("");
-    content = escapeHtmlCharacters(content);
-    return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${
-      this.language
-    }">\n${content}</code>\n</pre>${this.endingNewline?.lexeme ?? ""}`;
+
+    /*
+    If the code block is being transformed to HTML inline or markdown inline,
+    we need to remove ONE trailing newline from the content.
+
+    This is because if we think about the original code
+    ```lang
+    code_line
+    ```
+
+    This must become
+    `code_line`
+
+    The code_line will be parsed with a trailing newline.
+    Since we are converting this to some inline content
+    we need to remove the trailing newline so that it displays correctly.
+
+    This is NOT the case for elements in the middle of the code block,
+    since they will be parsed with the trailing newline correctly.
+
+    For example,
+    ```lang
+    code_line
+    code_line
+    ```
+
+    must become
+    `code_line`
+    `code_line`
+
+    so the trailing newline of the first code_line must be included,
+    but the trailing newline of the second code_line must not be included.
+    */
+    if (
+      options.code.transform_mode === "html_inline" ||
+      options.code.transform_mode === "markdown_inline"
+    ) {
+      content = content.replace(/\n$/, "");
+    }
+
+    switch (options.code.transform_mode) {
+      case "html_block":
+        return `<pre style="white-space: pre-wrap; overflow-wrap: normal;">\n<code class="language-${
+          this.language
+        }">\n${content}</code>\n</pre>${this.endingNewline?.lexeme ?? ""}`;
+      case "markdown_block":
+        return `\`\`\`${this.language_str}\n${content}\`\`\`${this.endingNewline?.lexeme ?? ""}`;
+      case "html_inline": // Handled by ClozeCodeLineNode.toClozeText()
+      case "markdown_inline":
+        return `${content}${this.endingNewline?.lexeme ?? ""}`;
+    }
   }
 }
 
 export class ClozeCodeLineNode extends ClozeParseTreeNode {
   type = ParseTreeNodeType.CodeLine;
   constructor(
+    public readonly language: CodeBlockLanguage,
     public readonly cloze_type: ClozeDeletionType,
     public readonly indent: ClozeIndentNode,
     public readonly contents: ClozeParseTreeNode[],
@@ -424,7 +469,17 @@ export class ClozeCodeLineNode extends ClozeParseTreeNode {
     if (this.cloze_type.is_deletion) {
       content = cloze_delete(content, this.cloze_type, options);
     }
-    return `${indent}${content}${this.endingNewline?.lexeme ?? ""}`;
+    switch (options.code.transform_mode) {
+      case "html_inline":
+        content = content.replace(/\n$/, "");
+        return `<pre style="white-space: pre-wrap; overflow-wrap: normal;"><code class="language-${this.language}">${content}</code></pre>${this.endingNewline?.lexeme ?? ""}`;
+      case "markdown_inline":
+        content = content.replace(/\n$/, "");
+        return `\`${content}\`${this.endingNewline?.lexeme ?? ""}`;
+      case "html_block":
+      case "markdown_block":
+        return `${indent}${content}${this.endingNewline?.lexeme ?? ""}`;
+    }
   }
 
   toText(): string {

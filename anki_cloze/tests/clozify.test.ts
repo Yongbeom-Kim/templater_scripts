@@ -5,9 +5,9 @@ describe("test spec", () => {
   describe.each([
     "code_blocks/cloze_index.spec.txt",
     "code_blocks/curly_braces.spec.txt",
-    "code_blocks/escape_characters.spec.txt",
     "code_blocks/indents.spec.txt",
     "code_blocks/languages.spec.txt",
+    "code_blocks/transformation_modes.spec.txt",
     "table/main.spec.txt",
     "table/empty.spec.txt",
     "text/curly_braces.spec.txt",

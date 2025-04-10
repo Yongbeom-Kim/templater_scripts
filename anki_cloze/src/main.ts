@@ -1,3 +1,3 @@
 import { clozify } from "./clozify";
 
-module.exports = clozify
+module.exports = clozify;

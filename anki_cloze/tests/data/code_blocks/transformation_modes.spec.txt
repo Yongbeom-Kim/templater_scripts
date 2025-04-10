@@ -1,0 +1,50 @@
+name: C++ {"code": {"transform_mode": "markdown_block"}}
+flags: {"code": {"transform_mode": "markdown_block"}}
+input:
+```c++
+/* comment */
+some_code
+```
+expected:
+```c++
+/* comment */
+{{c1::some_code}}
+```
+---
+name: C++ {"code": {"transform_mode": "markdown_inline"}}
+flags: {"code": {"transform_mode": "markdown_inline"}}
+input:
+```c++
+/* comment */
+some_code
+```
+expected:
+`/* comment */`
+`{{c1::some_code}}`
+---
+name: C++ {"code": {"transform_mode": "html_block"}}
+flags: {"code": {"transform_mode": "html_block"}}
+input:
+```c++
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-cpp">
+/* comment */
+{{c1::some_code}}
+</code>
+</pre>
+---
+name: C++ {"code": {"transform_mode": "html_inline"}}
+flags: {"code": {"transform_mode": "html_inline"}}
+input:
+```c++
+/* comment */
+some_code
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;"><code class="language-cpp">/* comment */</code></pre>
+<pre style="white-space: pre-wrap; overflow-wrap: normal;"><code class="language-cpp">{{c1::some_code}}</code></pre>
+---

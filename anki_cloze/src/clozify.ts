@@ -10,6 +10,9 @@ const default_options: ClozeTransformOptions = {
   list: {
     enable_hints: false,
   },
+  code: {
+    transform_mode: "html_block",
+  },
 };
 
 export function clozify(
