@@ -1,0 +1,33 @@
+name: Flag: Escape characters in code block
+flags: {"code": {"escape_characters": true}}
+input:
+```python
+<
+>
+&
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+&lt;
+&gt;
+&amp;
+</code>
+</pre>
+---
+name: Flag: Do not escape characters in code block
+flags: {"code": {"escape_characters": false}}
+input:
+```python
+<
+>
+&
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+<
+>
+&
+</code>
+</pre>

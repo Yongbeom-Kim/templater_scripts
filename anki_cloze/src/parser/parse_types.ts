@@ -236,7 +236,7 @@ export class TableNode extends ParseTreeNode {
     return (
       this.headers.toText() +
       "\n" +
-      this.rows.map((r) => r.toText()).join("\n") +
+      this.rows.map((r) => r.toText()).join("") +
       (this.endingNewline?.lexeme ?? "")
     );
   }
@@ -273,11 +273,19 @@ export class TableHeaderNode extends ParseTreeNode {
 }
 export class TableRowNode extends ParseTreeNode {
   type = ParseTreeNodeType.TableRow;
-  constructor(public readonly contents: TableCellNode[]) {
+  constructor(
+    public readonly contents: TableCellNode[],
+    public readonly endingNewline?: Token, // undefined if EOF
+  ) {
     super();
   }
   toText(): string {
-    return "| " + this.contents.map((c) => c.toText()).join(" | ") + " |";
+    return (
+      "| " +
+      this.contents.map((c) => c.toText()).join(" | ") +
+      " |" +
+      (this.endingNewline?.lexeme ?? "")
+    );
   }
 }
 

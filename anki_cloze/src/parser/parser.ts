@@ -54,13 +54,17 @@ const tryParseTable = (
     return [state, null];
   }
   const backupState = state;
-  let headerCells, headerAlignment, rowCells;
-
+  let headerCells: Token[][],
+    headerAlignment,
+    rowCells: Token[][],
+    endingNewline: Token | undefined;
+  let result: [Token[][], Token | undefined] | null = null;
   // Try to parse the table header row
-  [state, headerCells] = tryParseTableRow(state);
-  if (!headerCells) {
+  [state, result] = tryParseTableRow(state);
+  if (!result) {
     return [backupState, null];
   }
+  [headerCells, endingNewline] = result!;
 
   // Try to parse the table header separator
   [state, headerAlignment] = tryParseTableHeaderSeparator(state);
@@ -71,20 +75,20 @@ const tryParseTable = (
   // row[i] = ith row of table
   // row[i][j] = jth cell of ith row
   // row[i][j][k] = kth token of jth cell of ith row
-  const rows: Token[][][] = [];
+  const rows: [Token[][], Token | undefined][] = [];
   while (true) {
-    [state, rowCells] = tryParseTableRow(state);
-    if (!rowCells) {
+    [state, result] = tryParseTableRow(state);
+    if (!result) {
       break;
     }
-    rows.push(rowCells);
+    rows.push(result);
   }
 
   const colWidths = headerCells.map((headerCell, colIdx) =>
     Math.max(
       headerCell.length,
       ...rows.map((row) => {
-        const cell = row[colIdx] || [];
+        const cell = row[0][colIdx] || [];
         return cell.reduce((sum, token) => sum + token.lexeme.length, 0);
       }),
     ),
@@ -99,10 +103,11 @@ const tryParseTable = (
   const rowsNode = rows.map(
     (row) =>
       new TableRowNode(
-        row.map(
+        row[0].map(
           (cell, index) =>
             new TableCellNode(cell, headerAlignment[index], colWidths[index]),
         ),
+        row[1],
       ),
   );
 
@@ -117,7 +122,7 @@ const tryParseTable = (
  */
 const tryParseTableRow = (
   state: ParserState,
-): [ParserState, Token[][] | null] => {
+): [ParserState, [Token[][], Token | undefined] | null] => {
   if (state.eof()) {
     return [state, null];
   }
@@ -159,7 +164,7 @@ const tryParseTableRow = (
     cells.push(cellContent);
   }
 
-  return [state, cells];
+  return [state, [cells, endingNewline]];
 };
 
 const tryParseTableHeaderSeparator = (

@@ -65,10 +65,6 @@ export class ClozifyVisitor extends ParseTreeVisitor {
       this.visitCodeBlockNode(node);
     } else if (node instanceof TableNode) {
       this.visitTableNode(node);
-    } else if (node instanceof TableHeaderNode) {
-      this.visitTableHeaderNode(node);
-    } else if (node instanceof TableRowNode) {
-      this.visitTableRowNode(node);
     }
     if (this._transformedNodes.length != prevTransformedNodesLength + 1) {
       throw new Error(
@@ -309,11 +305,6 @@ export class ClozifyVisitor extends ParseTreeVisitor {
     this._visitStack.push(node);
     const { headers, rows } = node;
 
-    const n_cols = rows.length;
-    const n_rows = headers.contents.length;
-    const n_clozes = n_cols * (n_rows - 1);
-    const additional_col_size = n_clozes.toString().length + 7;
-
     const transformed_headers = new ClozeTableHeaderNode(
       headers.contents.map((c) => {
         return new ClozeTableCellNode(
@@ -325,7 +316,6 @@ export class ClozifyVisitor extends ParseTreeVisitor {
           c.contents,
           c.alignment,
           c.colWidth,
-          c.colWidth + additional_col_size,
         );
       }),
     );
@@ -344,9 +334,9 @@ export class ClozifyVisitor extends ParseTreeVisitor {
             c.contents,
             c.alignment,
             c.colWidth,
-            c.colWidth + additional_col_size,
           );
         }),
+        r.endingNewline,
       );
     });
 
@@ -359,20 +349,6 @@ export class ClozifyVisitor extends ParseTreeVisitor {
     );
     this._visitStack.pop();
   }
-
-  visitTableHeaderNode(node: TableHeaderNode): void {
-    this._visitStack.push(node);
-    const transformed_node = new ClozeTableHeaderNode(
-      node.contents.map((c) => {
-        this.visit(c);
-        return this._transformedNodes.pop()! as ClozeTableCellNode;
-      }),
-    );
-    this._transformedNodes.push(transformed_node);
-    this._visitStack.pop();
-  }
-
-  visitTableRowNode(node: TableRowNode): void {}
 
   get transformedNodes(): ClozeParseTreeNode[] {
     return this._transformedNodes;

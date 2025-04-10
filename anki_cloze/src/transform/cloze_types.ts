@@ -22,6 +22,8 @@ import { mergeObject } from "../utils/merge_object";
 const ZWJ = "\u200D";
 const FullRightCurlyBrace = "｝";
 
+const CLOZE_DELETION_LENGTH = 11; // {{c1000::}}, surely no one will have more than 9999 clozes in a table cell
+
 export type ClozeTransformOptions = {
   handle_curly: "fullwidth" | "zwj" | "insert_space";
   list: {
@@ -219,7 +221,7 @@ export class ClozeTableNode extends ClozeParseTreeNode {
     return (
       this.headers.toText() +
       "\n" +
-      this.rows.map((r) => r.toText()).join("\n") +
+      this.rows.map((r) => r.toText()).join("") +
       (this.endingNewline?.lexeme ?? "")
     );
   }
@@ -227,7 +229,7 @@ export class ClozeTableNode extends ClozeParseTreeNode {
     return (
       this.headers.toClozeText(options, disable_cloze) +
       "\n" +
-      this.rows.map((r) => r.toClozeText(options, disable_cloze)).join("\n") +
+      this.rows.map((r) => r.toClozeText(options, disable_cloze)).join("") +
       (this.endingNewline?.lexeme ?? "")
     );
   }
@@ -273,13 +275,13 @@ export class ClozeTableHeaderNode extends ClozeParseTreeNode {
         .map((c) => {
           switch (c.alignment) {
             case "left":
-              return ":" + "-".repeat(c.clozeColWidth) + " ";
+              return ":" + "-".repeat(c.colWidth + CLOZE_DELETION_LENGTH) + " ";
             case "center":
-              return ":" + "-".repeat(c.clozeColWidth) + ":";
+              return ":" + "-".repeat(c.colWidth + CLOZE_DELETION_LENGTH) + ":";
             case "right":
-              return " " + "-".repeat(c.clozeColWidth) + ":";
+              return " " + "-".repeat(c.colWidth + CLOZE_DELETION_LENGTH) + ":";
             default:
-              return " " + "-".repeat(c.clozeColWidth) + " ";
+              return " " + "-".repeat(c.colWidth + CLOZE_DELETION_LENGTH) + " ";
           }
         })
         .join("|") +
@@ -291,11 +293,19 @@ export class ClozeTableHeaderNode extends ClozeParseTreeNode {
 export class ClozeTableRowNode extends ClozeParseTreeNode {
   type = ParseTreeNodeType.TableRow;
 
-  constructor(public readonly contents: ClozeTableCellNode[]) {
+  constructor(
+    public readonly contents: ClozeTableCellNode[],
+    public readonly endingNewline?: Token, // undefined if EOF
+  ) {
     super({ is_deletion: false, is_hint: false, cloze_index: -1 });
   }
   toText(): string {
-    return "|" + this.contents.map((c) => c.toText()).join("|") + "|";
+    return (
+      "|" +
+      this.contents.map((c) => c.toText()).join("|") +
+      "|" +
+      (this.endingNewline?.lexeme ?? "")
+    );
   }
 
   toClozeText(options: ClozeTransformOptions, disable_cloze: boolean): string {
@@ -304,7 +314,8 @@ export class ClozeTableRowNode extends ClozeParseTreeNode {
       this.contents
         .map((c) => c.toClozeText(options, disable_cloze))
         .join(" | ") +
-      " |"
+      " |" +
+      (this.endingNewline?.lexeme ?? "")
     );
   }
 }
@@ -316,7 +327,6 @@ export class ClozeTableCellNode extends ClozeParseTreeNode {
     public readonly contents: Token[],
     public readonly alignment: TableAlignment,
     public readonly colWidth: number, // number of characters between " | " separators (including spaces)
-    public readonly clozeColWidth: number, // number of characters between " | " separators in cloze deletions (including spaces)
   ) {
     super(cloze_type);
   }
@@ -349,7 +359,7 @@ export class ClozeTableCellNode extends ClozeParseTreeNode {
     if (!disable_cloze) {
       contentText = cloze_delete(contentText, this.cloze_type, options);
     }
-    const padding = this.clozeColWidth - contentText.length;
+    const padding = this.colWidth + CLOZE_DELETION_LENGTH - contentText.length;
     let paddedText;
 
     switch (this.alignment) {
