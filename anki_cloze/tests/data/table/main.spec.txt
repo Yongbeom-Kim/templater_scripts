@@ -8,12 +8,12 @@ input:
 | Row 3       |   Row 3 Col 2   |   Row 3 Col 3 | Row 3 Col 4     |
 | Row 4       |   Row 4 Col 2   |   Row 4 Col 3 | Row 4 Col 4     |
 expected:
-| Row Headers      |    Center Aligned!     |          Right Aligned | Default Aligned        |
-|:---------------- |:----------------------:| ----------------------:| ---------------------- |
-| Row 1            |  {{c1::Row 1 Col 2}}   |    {{c2::Row 1 Col 3}} | {{c3::Row 1 Col 4}}    |
-| Row 2            |  {{c4::Row 2 Col 2}}   |    {{c5::Row 2 Col 3}} | {{c6::Row 2 Col 4}}    |
-| Row 3            |  {{c7::Row 3 Col 2}}   |    {{c8::Row 3 Col 3}} | {{c9::Row 3 Col 4}}    |
-| Row 4            |  {{c10::Row 4 Col 2}}  |   {{c11::Row 4 Col 3}} | {{c12::Row 4 Col 4}}   |
+| Row Headers            |      Center Aligned!       |            Right Aligned | Default Aligned            |
+|:---------------------- |:--------------------------:| ------------------------:| -------------------------- |
+| Row 1                  |    {{c1::Row 1 Col 2}}     |      {{c2::Row 1 Col 3}} | {{c3::Row 1 Col 4}}        |
+| Row 2                  |    {{c4::Row 2 Col 2}}     |      {{c5::Row 2 Col 3}} | {{c6::Row 2 Col 4}}        |
+| Row 3                  |    {{c7::Row 3 Col 2}}     |      {{c8::Row 3 Col 3}} | {{c9::Row 3 Col 4}}        |
+| Row 4                  |    {{c10::Row 4 Col 2}}    |     {{c11::Row 4 Col 3}} | {{c12::Row 4 Col 4}}       |
 ---
 name: Table handles cloze number increases in size, but only because of the previous element.
 flags: {}

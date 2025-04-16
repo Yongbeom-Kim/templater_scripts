@@ -1,0 +1,20 @@
+name: Handle multi-token table headers
+flags: {}
+input:
+| Lock Held \ Lock Requested | IS  | IX  | S   | X   |
+| -------------------------- | --- | --- | --- | --- |
+| IS                         | No  | No  | No  | Yes |
+| IX                         | No  | No  | Yes | Yes |
+| S                          | No  | Yes | No  | Yes |
+| X                          | Yes | Yes | Yes | Yes |
+expected:
+| Lock Held \ Lock Requested            | IS             | IX             | S              | X              |
+| ------------------------------------- | -------------- | -------------- | -------------- | -------------- |
+| IS                                    | {{c1::No}}     | {{c2::No}}     | {{c3::No}}     | {{c4::Yes}}    |
+| IX                                    | {{c5::No}}     | {{c6::No}}     | {{c7::Yes}}    | {{c8::Yes}}    |
+| S                                     | {{c9::No}}     | {{c10::Yes}}   | {{c11::No}}    | {{c12::Yes}}   |
+| X                                     | {{c13::Yes}}   | {{c14::Yes}}   | {{c15::Yes}}   | {{c16::Yes}}   |
+---
+
+
+

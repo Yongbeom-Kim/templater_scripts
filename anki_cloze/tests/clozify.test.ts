@@ -10,6 +10,7 @@ describe("test spec", () => {
     "code_blocks/transformation_modes.spec.txt",
     "table/main.spec.txt",
     "table/empty.spec.txt",
+    "table/bugs.spec.txt",
     "text/curly_braces.spec.txt",
     "text/lists.spec.txt",
   ])("%s", (name) => {

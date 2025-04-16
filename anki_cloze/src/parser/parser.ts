@@ -86,7 +86,7 @@ const tryParseTable = (
 
   const colWidths = headerCells.map((headerCell, colIdx) =>
     Math.max(
-      headerCell.length,
+      headerCell.map((token) => token.lexeme.length).reduce((x, y) => x + y, 0),
       ...rows.map((row) => {
         const cell = row[0][colIdx] || [];
         return cell.reduce((sum, token) => sum + token.lexeme.length, 0);
