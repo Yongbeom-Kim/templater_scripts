@@ -158,7 +158,9 @@ const tryParseTableRow = (
       cellContent.push(content[i]);
       i++;
     }
-    if (cellContent[cellContent.length - 1].type === TokenType.Whitespace) {
+    // if we have an empty table cell header |     |
+    // cellContent here will be empty list.
+    if (cellContent.length > 0 && cellContent[cellContent.length - 1].type === TokenType.Whitespace) {
       cellContent.pop();
     }
     cells.push(cellContent);

@@ -41,3 +41,59 @@ expected:
 | One            | {{c7::Two}}    | {{c8::Three}}    |
 | One            | {{c9::Two}}    | {{c10::Three}}   |
 | One            | {{c11::Two}}   | {{c12::Three}}   |
+
+---
+name: Table with empty top-left header
+flags: {}
+input:
+|     | Header 2 | Header 3 |
+|:--- |:--------:| --------:|
+| R1C1 |   R1C2   |   R1C3   |
+| R2C1 |   R2C2   |   R2C3   |
+expected:
+|                 |      Header 2       |            Header 3 |
+|:--------------- |:-------------------:| -------------------:|
+| R1C1            |    {{c1::R1C2}}     |        {{c2::R1C3}} |
+| R2C1            |    {{c3::R2C2}}     |        {{c4::R2C3}} |
+
+---
+name: Table with empty column headers
+flags: {}
+input:
+| R1H  |      |      |
+|:---- |:----:| ----:|
+| R1C1 | R1C2 | R1C3 |
+| R2C1 | R2C2 | R2C3 |
+expected:
+| R1H             |                 |                 |
+|:--------------- |:---------------:| ---------------:|
+| R1C1            |  {{c1::R1C2}}   |    {{c2::R1C3}} |
+| R2C1            |  {{c3::R2C2}}   |    {{c4::R2C3}} |
+
+---
+name: Table with empty row headers
+flags: {}
+input:
+| C1H  | C2H  | C3H  |
+|:---- |:----:| ----:|
+|      | R1C2 | R1C3 |
+|      | R2C2 | R2C3 |
+expected:
+| C1H            |       C2H       |             C3H |
+|:-------------- |:---------------:| ---------------:|
+|                |  {{c1::R1C2}}   |    {{c2::R1C3}} |
+|                |  {{c3::R2C2}}   |    {{c4::R2C3}} |
+
+---
+name: Table with empty column and row headers
+flags: {}
+input:
+|      |      |      |
+|:---- |:----:| ----:|
+|      | R1C2 | R1C3 |
+|      | R2C2 | R2C3 |
+expected:
+|             |                 |                 |
+|:----------- |:---------------:| ---------------:|
+|             |  {{c1::R1C2}}   |    {{c2::R1C3}} |
+|             |  {{c3::R2C2}}   |    {{c4::R2C3}} |
