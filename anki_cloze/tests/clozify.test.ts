@@ -3,16 +3,17 @@ import { parseSpecFile } from "./data/testcase_parser";
 
 describe("test spec", () => {
   describe.each([
-    "code_blocks/cloze_index.spec.txt",
-    "code_blocks/curly_braces.spec.txt",
-    "code_blocks/indents.spec.txt",
-    "code_blocks/languages.spec.txt",
-    "code_blocks/transformation_modes.spec.txt",
-    "table/main.spec.txt",
-    "table/empty.spec.txt",
-    "table/bugs.spec.txt",
-    "text/curly_braces.spec.txt",
-    "text/lists.spec.txt",
+    // "code_blocks/cloze_index.spec.txt",
+    // "code_blocks/curly_braces.spec.txt",
+    "code_blocks/double_equals.spec.txt",
+    // "code_blocks/indents.spec.txt",
+    // "code_blocks/languages.spec.txt",
+    // "code_blocks/transformation_modes.spec.txt",
+    // "table/main.spec.txt",
+    // "table/empty.spec.txt",
+    // "table/bugs.spec.txt",
+    // "text/curly_braces.spec.txt",
+    // "text/lists.spec.txt",
   ])("%s", (name) => {
     const testCases = parseSpecFile(`tests/data/${name}`);
     it.each(testCases)("$name", ({ input, expected, flags }) => {

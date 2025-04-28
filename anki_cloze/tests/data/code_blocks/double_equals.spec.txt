@@ -1,0 +1,14 @@
+name: Curly braces: Handle by inserting spaces
+flags: {"handle_curly": "insert_space"}
+input:
+```python
+# comment
+a == b
+```
+expected:
+<pre style="white-space: pre-wrap; overflow-wrap: normal;">
+<code class="language-python">
+# comment
+{{c1::a =‍= b}}
+</code>
+</pre>

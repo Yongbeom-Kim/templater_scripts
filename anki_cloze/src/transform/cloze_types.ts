@@ -49,6 +49,7 @@ const cloze_delete = (
   type: ClozeDeletionType,
   options: ClozeTransformOptions,
 ) => {
+  str = str.replaceAll("==", `=${ZWJ}=`);
   if (!type.is_deletion && !type.is_hint) {
     return str;
   }

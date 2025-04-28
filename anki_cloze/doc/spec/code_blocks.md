@@ -196,6 +196,10 @@ For space indents, the following scheme is used:
 1. If indents are a multiple of 4 (spaces), then 4 spaces = 1 tab.
 2. Else, 2 spaces = 1 tab. Odd number of spaces are rounded up.
 
+### Double Equals (`==`) Conversion
+
+When you wrap the code blocks in `<pre style="white-space: pre-wrap; overflow-wrap: normal;"><code class="language-cpp">`, Obsidian_to_Anki converts this to `<mark>` tags for highlights (it does not spot the code blocks). Due to this, we add a zero-width joiner in between the double equals signs.
+
 ### Supported Languages
 
 The following languages are supported:
