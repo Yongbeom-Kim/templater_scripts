@@ -27,6 +27,7 @@ export const isComment = (
     case CodeBlockLanguage.Jsx:
     case CodeBlockLanguage.TypeScript:
     case CodeBlockLanguage.Tsx:
+    case CodeBlockLanguage.Proto:
       return (
         state.peek()[0].type === TokenType.Punctuation &&
         (state.peek()[0].lexeme === "//" || state.peek()[0].lexeme === "/*")

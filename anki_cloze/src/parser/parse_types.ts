@@ -341,6 +341,7 @@ export enum CodeBlockLanguage {
   Sql = "sql",
   Toml = "toml",
   Yaml = "yaml",
+  Proto = "proto",
   None = "",
 }
 
@@ -377,6 +378,8 @@ export namespace CodeBlockLanguage {
         return CodeBlockLanguage.TypeScript;
       case "tsx":
         return CodeBlockLanguage.Tsx;
+      case "proto":
+        return CodeBlockLanguage.Proto;
       case "python":
       case "py":
         return CodeBlockLanguage.Python;
