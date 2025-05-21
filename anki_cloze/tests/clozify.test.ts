@@ -7,6 +7,7 @@ describe("test spec", () => {
     "code_blocks/curly_braces.spec.txt",
     "code_blocks/double_equals.spec.txt",
     "code_blocks/indents.spec.txt",
+    "code_blocks/invisible_characters.spec.txt",
     "code_blocks/languages.spec.txt",
     "code_blocks/transformation_modes.spec.txt",
     "table/main.spec.txt",

@@ -1,6 +1,7 @@
 import fs from "fs";
 
 const ZWJ = "\u200D";
+const NO_BREAK_SPACE = "\u00A0";
 
 interface TestCase {
   name: string;
@@ -38,6 +39,7 @@ function parseSpec(data: string): TestCase[] {
   const sections = data
     .replaceAll("<ZWJ>", ZWJ)
     .replaceAll("<TAB>", "\t")
+    .replaceAll("<NBSP>", NO_BREAK_SPACE)
     .split("\n---")
     .map((section) => section.trim())
     .filter((section) => section);

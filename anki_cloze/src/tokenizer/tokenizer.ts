@@ -26,7 +26,7 @@ export const tokenize = (text: string): Token[] => {
       [updatedState, lexeme] = state.consumeUntil(not(isPunctuation));
       tokens.push(Token.Create(state, TokenType.Punctuation, lexeme));
     } else {
-      throw new Error(`Unexpected character: ${state.peek(1)}`);
+      throw new Error(`Unexpected character: "${state.peek(1)}". Index: (${state.line_pos}, ${state.col_pos}). Context: ${state.peek(5)}...`);
     }
     state = updatedState;
   }
@@ -42,7 +42,8 @@ const isDigit = (c: string): boolean => {
 };
 
 const isSpace = (c: string): boolean => {
-  return c == " " || c == "\t";
+  // \u00A0 is a non-breaking space
+  return c == " " || c == "\t" || c == "\u00A0";
 };
 
 const isNewline = (c: string): boolean => {

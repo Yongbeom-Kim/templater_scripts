@@ -554,4 +554,3 @@ expected:
 {{c1::some_code}}
 </code>
 </pre>
----
