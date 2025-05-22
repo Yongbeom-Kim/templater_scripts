@@ -8,7 +8,7 @@ some_code<NBSP>some_code
 expected:
 <pre style="white-space: pre-wrap; overflow-wrap: normal;">
 <code class="language-cpp">
-/*<NBSP>comment<NBSP>*/
-{{c1::some_code<NBSP>some_code}}
+/* comment */
+{{c1::some_code some_code}}
 </code>
 </pre>

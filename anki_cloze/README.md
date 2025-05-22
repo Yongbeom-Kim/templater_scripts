@@ -22,6 +22,7 @@ To see more, go to the specifications documents.
 - [Tables](./doc/spec/tables.md)
 
 For other miscellaneous transformations:
+- [Special Characters](./doc/spec/special_characters.md)
 - [Handling Curly Braces](./doc/spec/curly_braces.md)
 
 ### Example

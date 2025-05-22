@@ -5,6 +5,9 @@ export const tokenize = (text: string): Token[] => {
   // Normalize newlines
   text = text.replaceAll("\r\n", "\n").replaceAll("\r", "\n");
 
+  // Normalize non-breaking spaces
+  text = text.replaceAll("\u00A0", " ");
+
   const tokens: Token[] = [];
   let state = new TokenizerState(text);
   while (state.good()) {
@@ -43,7 +46,7 @@ const isDigit = (c: string): boolean => {
 
 const isSpace = (c: string): boolean => {
   // \u00A0 is a non-breaking space
-  return c == " " || c == "\t" || c == "\u00A0";
+  return c == " " || c == "\t";
 };
 
 const isNewline = (c: string): boolean => {
